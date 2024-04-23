@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MyRecipeBook.Communication.Reponses;
+using MyRecipeBook.Application.UseCases.User.Register;
 using MyRecipeBook.Communication.Request;
+using MyRecipeBook.Communication.Responses;
 
 namespace MyRecipeBook.API.Controllers;
 
@@ -10,8 +11,11 @@ public class UserController : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisterUserJson), StatusCodes.Status201Created)]
-    public IActionResult Register([FromBody] RequestRequisterUserJson request)
+    public IActionResult Register([FromBody] RequestRegisterUserJson request)
     {
-        return Created();
+        var useCase = new RegisterUserUseCase();
+        var response = useCase.Execute(request);
+        
+        return Created(string.Empty, response);
     }
 }
