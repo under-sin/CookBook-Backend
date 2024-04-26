@@ -1,3 +1,3 @@
 ﻿namespace MyRecipeBook.Exceptions.ExceptionsBase;
 
-public class MyRecipeBookException : SystemException { }
+public abstract class MyRecipeBookException : SystemException { }

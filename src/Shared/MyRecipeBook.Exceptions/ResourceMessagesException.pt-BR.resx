@@ -33,4 +33,7 @@
     <data name="UNKNOWN_ERROR" xml:space="preserve">
         <value>Error desconhecido.</value>
     </data>
+    <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve">
+        <value>E-mail já em uso.</value>
+    </data>
 </root>

@@ -132,4 +132,7 @@
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Unknown error.</value>
   </data>
+  <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve">
+    <value>Email already in use</value>
+  </data>
 </root>

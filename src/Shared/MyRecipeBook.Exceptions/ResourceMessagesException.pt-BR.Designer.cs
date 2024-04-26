@@ -60,6 +60,15 @@ namespace MyRecipeBook.Exceptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to E-mail já em uso..
+        /// </summary>
+        internal static string EMAIL_ALREADY_IN_USE {
+            get {
+                return ResourceManager.GetString("EMAIL_ALREADY_IN_USE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O e-mail não pode estar vazio..
         /// </summary>
         internal static string EMAIL_EMPTY {
