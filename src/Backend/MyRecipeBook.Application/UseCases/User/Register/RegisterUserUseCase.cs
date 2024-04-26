@@ -1,31 +1,62 @@
-﻿using MyRecipeBook.Communication.Request;
+﻿using AutoMapper;
+using FluentValidation.Results;
+using MyRecipeBook.Application.Services.AutoMapper;
+using MyRecipeBook.Application.Services.Cryptography;
+using MyRecipeBook.Communication.Request;
 using MyRecipeBook.Communication.Responses;
+using MyRecipeBook.Domain.Repositories;
+using MyRecipeBook.Domain.Repositories.Users;
+using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.User.Register;
 
-public class RegisterUserUseCase
+public class RegisterUserUseCase : IRegisterUserUseCase
 {
-    public ResponseRegisterUserJson Execute(RequestRegisterUserJson request)
+    private readonly IUserReadOnlyRepository _readOnlyRepository;
+    private readonly IUserWriteOnlyRepository _writeOnlyRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    private readonly PasswordEncripter _passwordEncripter;
+
+    public RegisterUserUseCase(
+        IUserReadOnlyRepository readOnlyRepository,
+        IUserWriteOnlyRepository writeOnlyRepository,
+        IMapper mapper,
+        PasswordEncripter passwordEncripter, 
+        IUnitOfWork unitOfWork)
     {
-        Validate(request);
+        _readOnlyRepository = readOnlyRepository;
+        _writeOnlyRepository = writeOnlyRepository;
+        _mapper = mapper;
+        _passwordEncripter = passwordEncripter;
+        _unitOfWork = unitOfWork;
+    }
 
-        // mapear request para entidade
+    public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)
+    {
+        await Validate(request);
 
-        // criptografar senha
+        var user = _mapper.Map<Domain.Entities.User>(request);
+        user.Password = _passwordEncripter.Encrypt(request.Password);
 
-        // salvar entidade no banco de dados
-
-        return new ResponseRegisterUserJson
+        await _writeOnlyRepository.Add(user);
+        await _unitOfWork.Commit();
+        
+        return new()
         {
             Name = request.Name
         };
     }
 
-    public void Validate(RequestRegisterUserJson request)
+    public async Task Validate(RequestRegisterUserJson request)
     {
         var validator = new RegisterUserValidator();
         var result = validator.Validate(request);
+        
+        var emailExists = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
+        if (emailExists)
+            result.Errors.Add(new(string.Empty, ResourceMessagesException.EMAIL_ALREADY_IN_USE));
 
         if (!result.IsValid)
         {
