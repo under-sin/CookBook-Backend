@@ -8,6 +8,7 @@ public class RegisterUserValidator : AbstractValidator<RequestRegisterUserJson>
 {
     public RegisterUserValidator()
     {
+        // FluentValidation para fazer as validações
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage(ResourceMessagesException.NAME_EMPTY);
