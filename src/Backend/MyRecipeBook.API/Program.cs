@@ -1,5 +1,7 @@
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
+using MyRecipeBook.Application;
+using MyRecipeBook.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,12 @@ builder.Services.AddEndpointsApiExplorer();
 // Configuração para o filter de exception
 builder.Services.AddMvc(options
     => options.Filters.Add(typeof(ExceptionFilter)));
+
+// Configuração para a DI do projeto de Application e Infrastructure
+builder.Services.AddApplication(builder.Configuration);
+
+// builder.Configuration passado como parâmetro vai servir para recuperar a string de conexão dentro do método AddInfrastructure
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
