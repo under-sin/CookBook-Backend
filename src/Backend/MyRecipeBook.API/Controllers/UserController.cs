@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBook.Application.UseCases.User.Register;
-using MyRecipeBook.Communication.Request;
+using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 
 namespace MyRecipeBook.API.Controllers;

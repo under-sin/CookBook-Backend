@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MyRecipeBook.Communication.Request;
+using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Domain.Entities;
 
 namespace MyRecipeBook.Application.Services.AutoMapper;
