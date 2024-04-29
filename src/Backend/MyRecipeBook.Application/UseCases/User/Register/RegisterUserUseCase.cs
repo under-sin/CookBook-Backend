@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using MyRecipeBook.Application.Services.AutoMapper;
 using MyRecipeBook.Application.Services.Cryptography;
-using MyRecipeBook.Communication.Request;
+using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Users;
@@ -23,7 +23,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         IUserReadOnlyRepository readOnlyRepository,
         IUserWriteOnlyRepository writeOnlyRepository,
         IMapper mapper,
-        PasswordEncripter passwordEncripter, 
+        PasswordEncripter passwordEncripter,
         IUnitOfWork unitOfWork)
     {
         _readOnlyRepository = readOnlyRepository;
@@ -42,8 +42,8 @@ public class RegisterUserUseCase : IRegisterUserUseCase
 
         await _writeOnlyRepository.Add(user);
         await _unitOfWork.Commit();
-        
-        return new()
+
+        return new ResponseRegisterUserJson
         {
             Name = request.Name
         };
@@ -53,10 +53,10 @@ public class RegisterUserUseCase : IRegisterUserUseCase
     {
         var validator = new RegisterUserValidator();
         var result = validator.Validate(request);
-        
+
         var emailExists = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
         if (emailExists)
-            result.Errors.Add(new(string.Empty, ResourceMessagesException.EMAIL_ALREADY_IN_USE));
+            result.Errors.Add(new ValidationFailure(string.Empty, ResourceMessagesException.EMAIL_ALREADY_IN_USE));
 
         if (!result.IsValid)
         {

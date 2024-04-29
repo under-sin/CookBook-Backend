@@ -28,7 +28,7 @@ public class CultureMiddleware
         CultureInfo.CurrentCulture = cultureInfo;
         CultureInfo.CurrentUICulture = cultureInfo;
 
-        // isso libera a req, caso contrário, ficaria travada no middleware
+        // isso libera a req, caso contrário, ficaria travada no middleware (testar isso depois)
         await _next(context);
     }
 }
