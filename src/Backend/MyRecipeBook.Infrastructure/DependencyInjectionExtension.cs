@@ -18,9 +18,13 @@ public static class DependencyInjectionExtension
         this IServiceCollection services, 
         IConfiguration configuration)
     {
+        AddRepositories(services);
+
+        if (configuration.IsUnitTestEnvironment())
+            return;
+
         AddDbContext(services, configuration);
         AddFluentMigrator(services, configuration);
-        AddRepositories(services);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -58,6 +62,6 @@ public static class DependencyInjectionExtension
                 .AddMySql5()
                 .WithGlobalConnectionString(connectionString)
                 .ScanIn(Assembly.Load("MyRecipeBook.Infrastructure")).For.All();
-        });
+        }).AddLogging(lb => lb.AddFluentMigratorConsole());
     }
 }

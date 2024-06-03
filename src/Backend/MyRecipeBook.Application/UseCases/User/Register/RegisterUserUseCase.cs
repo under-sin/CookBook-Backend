@@ -22,15 +22,15 @@ public class RegisterUserUseCase : IRegisterUserUseCase
     public RegisterUserUseCase(
         IUserReadOnlyRepository readOnlyRepository,
         IUserWriteOnlyRepository writeOnlyRepository,
-        IMapper mapper,
+        IUnitOfWork unitOfWork,
         PasswordEncripter passwordEncripter,
-        IUnitOfWork unitOfWork)
+        IMapper mapper)
     {
         _readOnlyRepository = readOnlyRepository;
         _writeOnlyRepository = writeOnlyRepository;
-        _mapper = mapper;
-        _passwordEncripter = passwordEncripter;
         _unitOfWork = unitOfWork;
+        _passwordEncripter = passwordEncripter;
+        _mapper = mapper;
     }
 
     public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)

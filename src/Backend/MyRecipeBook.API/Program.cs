@@ -46,8 +46,17 @@ app.Run();
 
 void MigrateDatabase()
 {
+    if (builder.Configuration.IsUnitTestEnvironment())
+        return;
+
     var connectionString = builder.Configuration.ConnectionString();
     var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
     
     DatabaseMigration.Migrate(connectionString, serviceScope.ServiceProvider);
 }
+
+/*
+ * É preciso criar esse partial para as configuracoes do Program.cs serem 
+ * acessíveis nos testes de integração 
+ */
+public partial class Program { }
