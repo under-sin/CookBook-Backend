@@ -15,7 +15,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             {
                 // Remove o MyRecipeBookDbContext do container de injecao de dependencia caso encontre
                 var descriptor = services
-                    .SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MyRecipeBookDbContext>));
+                    .SingleOrDefault(d => 
+                        d.ServiceType == typeof(DbContextOptions<MyRecipeBookDbContext>));
                 
                 if (descriptor is not null)
                     services.Remove(descriptor);

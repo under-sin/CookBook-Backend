@@ -17,7 +17,7 @@ public class ExceptionFilter : IExceptionFilter
             HandleUnknownException(context);
     }
 
-    private void HandleProjectException(ExceptionContext context)
+    private static void HandleProjectException(ExceptionContext context)
     {
         if (context.Exception is ErrorOnValidationException)
         {
@@ -28,7 +28,7 @@ public class ExceptionFilter : IExceptionFilter
         }
     }
 
-    private void HandleUnknownException(ExceptionContext context)
+    private static void HandleUnknownException(ExceptionContext context)
     {
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson(ResourceMessagesException.UNKNOWN_ERROR));

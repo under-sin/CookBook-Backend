@@ -1,6 +1,7 @@
 using Dapper;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
+using MyRecipeBook.Domain.Extensions;
 using MySqlConnector;
 
 namespace MyRecipeBook.Infrastructure.Migrations;
@@ -28,7 +29,7 @@ public static class DatabaseMigration
         var records = dbConnection
             .Query("SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = @dbname", parameters);
 
-        if (records.Any() == false)
+        if (records.Any().IsFalse())
             dbConnection.Execute($"CREATE DATABASE {databaseName}");
     }
 

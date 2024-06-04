@@ -4,7 +4,8 @@ namespace WebApi.Test.InlineData;
 
 public class CultureInlineDataTest : IEnumerable<object[]>
 {
-    // retorna os dados que serão passados para o teste que vai testar as mensagens de erro de validação
+    // retorna os dados que serão passados para o 
+    // teste que vai testar as mensagens de erro de validação
     public IEnumerator<object[]> GetEnumerator()
     {
         yield return new object[] { "en" };

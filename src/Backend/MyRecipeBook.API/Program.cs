@@ -51,7 +51,7 @@ void MigrateDatabase()
 
     var connectionString = builder.Configuration.ConnectionString();
     var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
-    
+
     DatabaseMigration.Migrate(connectionString, serviceScope.ServiceProvider);
 }
 
@@ -59,4 +59,7 @@ void MigrateDatabase()
  * É preciso criar esse partial para as configuracoes do Program.cs serem 
  * acessíveis nos testes de integração 
  */
-public partial class Program { }
+public partial class Program
+{
+    protected Program(){}
+}

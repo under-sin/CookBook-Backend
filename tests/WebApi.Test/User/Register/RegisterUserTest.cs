@@ -32,6 +32,10 @@ public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
 
         var responseData = await JsonDocument.ParseAsync(responseBody);
 
+        /* Dessa forma não vamos serializar o json em um objeto.
+         * Vamos pegar o valor da propriedade name e verificar 
+         * se é igual ao valor que foi enviado na requisição
+         */
         responseData.RootElement.GetProperty("name")
             .GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
     }
@@ -64,6 +68,7 @@ public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
         var expectedMessage = ResourceMessagesException
             .ResourceManager.GetString("NAME_EMPTY", new CultureInfo(culture));
 
-        errors.Should().ContainSingle().And.Contain(error => error.GetString()!.Equals(expectedMessage));
+        errors.Should().ContainSingle()
+            .And.Contain(error => error.GetString()!.Equals(expectedMessage));
     }
 }
