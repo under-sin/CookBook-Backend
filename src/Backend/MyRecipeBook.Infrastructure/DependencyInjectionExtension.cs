@@ -47,7 +47,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
     }
     
-    public static void AddFluentMigrator(this IServiceCollection services, IConfiguration configuration)
+    private static void AddFluentMigrator(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
         
