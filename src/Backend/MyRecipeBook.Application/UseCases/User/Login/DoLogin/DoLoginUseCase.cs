@@ -23,7 +23,9 @@ public class DoLoginUseCase : IDoLoginUseCase
     public async Task<ResponseRegisterUserJson> Execute(RequestLoginJson request)
     {
         var encryptedPassword = _passwordEncripter.Encrypt(request.Password);
-        var user = await _userRepository.GetUserByEmailAndPassword(request.Email, encryptedPassword) ?? throw new InvalidLoginException();
+        var user = await _userRepository
+            .GetUserByEmailAndPassword(request.Email, encryptedPassword) 
+                ?? throw new InvalidLoginException();
         
         return new ResponseRegisterUserJson
         {
