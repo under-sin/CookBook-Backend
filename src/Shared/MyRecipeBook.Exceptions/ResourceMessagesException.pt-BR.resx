@@ -36,4 +36,7 @@
     <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve">
         <value>E-mail já em uso.</value>
     </data>
+    <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
+        <value>E-mail/senha invalido</value>
+    </data>
 </root>

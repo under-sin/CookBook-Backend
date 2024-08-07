@@ -33,7 +33,7 @@ public static class DependencyInjectionExtension
         var connectionString = configuration.ConnectionString();
         var serverVersion = new MySqlServerVersion(new Version(8, 3, 0));
 
-        services.AddDbContext<MyRecipeBookDbContext>(dbContextOptions =>
+        services.AddDbContext<MyRecipeBookDbContext>(dbContextOptions => 
         {
             dbContextOptions.UseMySql(connectionString, serverVersion);
         });

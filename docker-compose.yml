@@ -1,6 +1,4 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   mysql:
     image: mysql:latest
     container_name: mysql_container

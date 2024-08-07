@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Application.Services.AutoMapper;
 using MyRecipeBook.Application.Services.Cryptography;
+using MyRecipeBook.Application.UseCases.User.Login.DoLogin;
 using MyRecipeBook.Application.UseCases.User.Register;
 
 namespace MyRecipeBook.Application;
@@ -28,6 +29,7 @@ public static class DependencyInjectionExtension
     private static void AddUseCase(IServiceCollection services)
     {
         services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+        services.AddScoped<IDoLoginUseCase, DoLoginUseCase>();
     }
     
     // Dessa maneira podemos usar a classe PasswordEncripter em qualquer lugar que seja injetada

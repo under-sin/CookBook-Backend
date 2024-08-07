@@ -7,10 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MyRecipeBook.Exceptions {
+namespace MyRecipeBook.Exceptions
+{
     using System;
-    
-    
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -21,95 +22,126 @@ namespace MyRecipeBook.Exceptions {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ResourceMessagesException_pt_BR {
-        
+    internal class ResourceMessagesException_pt_BR
+    {
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ResourceMessagesException_pt_BR() {
+        internal ResourceMessagesException_pt_BR()
+        {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if (object.ReferenceEquals(resourceMan, null))
+                {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MyRecipeBook.Exceptions.ResourceMessagesException.pt-BR", typeof(ResourceMessagesException_pt_BR).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
-            get {
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
                 return resourceCulture;
             }
-            set {
+            set
+            {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to E-mail já em uso..
         /// </summary>
-        internal static string EMAIL_ALREADY_IN_USE {
-            get {
+        internal static string EMAIL_ALREADY_IN_USE
+        {
+            get
+            {
                 return ResourceManager.GetString("EMAIL_ALREADY_IN_USE", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to O e-mail não pode estar vazio..
         /// </summary>
-        internal static string EMAIL_EMPTY {
-            get {
+        internal static string EMAIL_EMPTY
+        {
+            get
+            {
                 return ResourceManager.GetString("EMAIL_EMPTY", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to O e-mail é inválido..
         /// </summary>
-        internal static string EMAIL_INVALID {
-            get {
+        internal static string EMAIL_INVALID
+        {
+            get
+            {
                 return ResourceManager.GetString("EMAIL_INVALID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to O nome não pode estar vazio..
         /// </summary>
-        internal static string NAME_EMPTY {
-            get {
+        internal static string NAME_EMPTY
+        {
+            get
+            {
                 return ResourceManager.GetString("NAME_EMPTY", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to A senha deve ter pelo menos 6 caracteres.
         /// </summary>
-        internal static string PASSWORD_EMPTY {
-            get {
+        internal static string PASSWORD_EMPTY
+        {
+            get
+            {
                 return ResourceManager.GetString("PASSWORD_EMPTY", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Error desconhecido..
         /// </summary>
-        internal static string UNKNOWN_ERROR {
-            get {
+        internal static string UNKNOWN_ERROR
+        {
+            get
+            {
                 return ResourceManager.GetString("UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail/password invalid..
+        /// </summary>
+        public static string EMAIL_OR_PASSWORD_INVALID
+        {
+            get
+            {
+                return ResourceManager.GetString("EMAIL_OR_PASSWORD_INVALID", resourceCulture);
             }
         }
     }

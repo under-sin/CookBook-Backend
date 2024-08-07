@@ -5,9 +5,7 @@ using MyRecipeBook.Communication.Responses;
 
 namespace MyRecipeBook.API.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class UserController : ControllerBase
+public class UserController : MyRecipeBookBaseController
 {
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisterUserJson), StatusCodes.Status201Created)]

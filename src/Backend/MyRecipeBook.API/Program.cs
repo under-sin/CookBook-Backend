@@ -1,3 +1,4 @@
+using MyRecipeBook.API.Converters;
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
 using MyRecipeBook.Application;
@@ -7,10 +8,12 @@ using MyRecipeBook.Infrastructure.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddControllers();
+// AddJsonOptions é usado para adicionar um conversor de string que remove espaços extras
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
+    
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Configuração para o filter de exception
 builder.Services.AddMvc(options
@@ -21,8 +24,8 @@ builder.Services.AddApplication(builder.Configuration);
 
 // builder.Configuration passado como parâmetro vai servir para recuperar a string de conexão dentro do método AddInfrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 
