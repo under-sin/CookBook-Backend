@@ -11,19 +11,17 @@ using WebApi.Test.InlineData;
 
 namespace WebApi.Test.Login.DoLogin;
 
-public class DoLoginTest : IClassFixture<CustomWebApplicationFactory>
+public class DoLoginTest : MyRecipeBookClassFixture
 {
     private readonly string method = "login";
-    private readonly HttpClient _httpClient;
     private readonly string _userEmail = string.Empty;
     private readonly string _userName = string.Empty;
     private readonly string _userPassword = string.Empty;
 
 
     public DoLoginTest(CustomWebApplicationFactory factory)
+        : base(factory)
     {
-        _httpClient = factory.CreateClient();
-
         _userEmail = factory.GetEmail();
         _userName = factory.GetName();
         _userPassword = factory.GetPassword();
@@ -38,7 +36,7 @@ public class DoLoginTest : IClassFixture<CustomWebApplicationFactory>
             Password = _userPassword
         };
 
-        var response = await _httpClient.PostAsJsonAsync(method, request);
+        var response = await DoPost(method, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -55,14 +53,7 @@ public class DoLoginTest : IClassFixture<CustomWebApplicationFactory>
     {
         var request = RequestLoginJsonBuilder.Build();
 
-        // remove o cabeçalho Accept-Language caso exista
-        if (_httpClient.DefaultRequestHeaders.Contains("Accept-Language"))
-            _httpClient.DefaultRequestHeaders.Remove("Accept-Language");
-
-        // adiciona o cabeçalho Accept-Language com a cultura informada no parâmetro
-        _httpClient.DefaultRequestHeaders.Add("Accept-Language", culture);
-
-        var response = await _httpClient.PostAsJsonAsync(method, request);
+        var response = await DoPost(method, request, culture);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 

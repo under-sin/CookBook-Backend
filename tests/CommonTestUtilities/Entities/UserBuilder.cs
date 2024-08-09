@@ -8,7 +8,7 @@ namespace CommonTestUtilities.Entities;
 public class UserBuilder
 {
     // retorno nomeado. Assim conseguimos retornar mais de um valor e nomear cada um
-    public static (User user, string Password) Build()
+    public static (User user, string password) Build()
     {
         var passwordEncripter = PasswordEncripterBuilder.Build();
         var password = new Faker().Internet.Password();
