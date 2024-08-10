@@ -6,6 +6,7 @@ using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Users;
+using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
@@ -17,6 +18,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
     private readonly IUserWriteOnlyRepository _writeOnlyRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IAccessTokenGenerator _accessTokenGenerator;
     private readonly PasswordEncripter _passwordEncripter;
 
     public RegisterUserUseCase(
@@ -24,13 +26,15 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         IUserWriteOnlyRepository writeOnlyRepository,
         IUnitOfWork unitOfWork,
         PasswordEncripter passwordEncripter,
-        IMapper mapper)
+        IMapper mapper,
+        IAccessTokenGenerator accessTokenGenerator)
     {
         _readOnlyRepository = readOnlyRepository;
         _writeOnlyRepository = writeOnlyRepository;
         _unitOfWork = unitOfWork;
         _passwordEncripter = passwordEncripter;
         _mapper = mapper;
+        _accessTokenGenerator = accessTokenGenerator;
     }
 
     public async Task<ResponseRegisterUserJson> Execute(RequestRegisterUserJson request)
@@ -39,13 +43,19 @@ public class RegisterUserUseCase : IRegisterUserUseCase
 
         var user = _mapper.Map<Domain.Entities.User>(request);
         user.Password = _passwordEncripter.Encrypt(request.Password);
+        user.UserIdentifier = Guid.NewGuid();
 
         await _writeOnlyRepository.Add(user);
         await _unitOfWork.Commit();
 
         return new ResponseRegisterUserJson
         {
-            Name = request.Name
+            Name = request.Name,
+            // É preciso retornar o token para que o usuário já logue após o registro
+            Tokens = new ResponseTokensJson
+            {
+                AccessToken = _accessTokenGenerator.Generator(user.UserIdentifier)
+            }
         };
     }
 
