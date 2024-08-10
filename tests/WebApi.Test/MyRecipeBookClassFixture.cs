@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 namespace WebApi.Test;
 
 /// <summary>
-/// A classe MyRecipeBookClassFixture é uma forma de centralizar a criação de um HttpClient
+/// A classe MyRecipeBookCflassFixture é uma forma de centralizar a criação de um HttpClient
 /// para ser utilizado em todos os testes de integração.
 /// Nela é possível adicionar métodos que serão utilizados em todos os testes, como por exemplo
 /// o método DoPost que é utilizado para fazer requisições POST para a API.
