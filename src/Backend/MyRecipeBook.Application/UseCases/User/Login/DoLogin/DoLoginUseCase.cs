@@ -16,12 +16,12 @@ public class DoLoginUseCase : IDoLoginUseCase
 
     public DoLoginUseCase(
         IUserReadOnlyRepository userRepository,
-        PasswordEncripter passwordEncripter,
-        IAccessTokenGenerator accessTokenGenerator)
+        IAccessTokenGenerator accessTokenGenerator,
+        PasswordEncripter passwordEncripter)
     {
         _userRepository = userRepository;
-        _passwordEncripter = passwordEncripter;
         _accessTokenGenerator = accessTokenGenerator;
+        _passwordEncripter = passwordEncripter;
     }
 
     public async Task<ResponseRegisterUserJson> Execute(RequestLoginJson request)

@@ -43,8 +43,19 @@ public class DoLoginTest : MyRecipeBookClassFixture
         await using var responseBody = await response.Content.ReadAsStreamAsync();
         var responseData = await JsonDocument.ParseAsync(responseBody);
 
-        responseData.RootElement.GetProperty("name")
+        responseData.RootElement
+            .GetProperty("name")
             .GetString().Should().NotBeNullOrWhiteSpace().And.Be(_userName);
+        
+        /*
+         * Como o Tokens é um objeto, podemos encadear a buscar usando GetProperty
+         * e passando o nome da propriedade que queremos buscar
+         * Neste caso, queremos o valor da propriedade accessToken
+         */
+        responseData.RootElement
+            .GetProperty("tokens")
+            .GetProperty("accessToken")
+            .GetString().Should().NotBeNullOrWhiteSpace();
     }
 
     [Theory]

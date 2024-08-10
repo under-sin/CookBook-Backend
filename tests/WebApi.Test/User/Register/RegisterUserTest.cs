@@ -14,7 +14,7 @@ public class RegisterUserTest : MyRecipeBookClassFixture
 {
     private readonly string method = "user";
 
-    public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) {}
+    public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
     public async Task Success()
@@ -33,8 +33,13 @@ public class RegisterUserTest : MyRecipeBookClassFixture
          * Vamos pegar o valor da propriedade name e verificar 
          * se é igual ao valor que foi enviado na requisição
          */
-        responseData.RootElement.GetProperty("name")
+        responseData.RootElement
+            .GetProperty("name")
             .GetString().Should().NotBeNullOrWhiteSpace().And.Be(request.Name);
+            
+        responseData.RootElement
+            .GetProperty("tokens")
+            .GetProperty("accessToken").GetString().Should().NotBeNullOrWhiteSpace();
     }
 
     [Theory]
