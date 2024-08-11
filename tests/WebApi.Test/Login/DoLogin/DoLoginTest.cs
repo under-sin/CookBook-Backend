@@ -1,11 +1,9 @@
 using CommonTestUtilities.Requests;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using WebApi.Test.InlineData;
 
