@@ -38,7 +38,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
                 throw new MyRecipeBookException(ResourceMessagesException.USER_WITHOUT_PERMISSION);
             }
         }
-        catch (SecurityTokenExpiredException ex)
+        catch (SecurityTokenExpiredException)
         {
             context.Result = new UnauthorizedObjectResult(new ResponseErrorJson("Token expired")
             {

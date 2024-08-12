@@ -2,7 +2,9 @@ using Microsoft.OpenApi.Models;
 using MyRecipeBook.API.Converters;
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
+using MyRecipeBook.API.Token;
 using MyRecipeBook.Application;
+using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Infrastructure;
 using MyRecipeBook.Infrastructure.Extensions;
 using MyRecipeBook.Infrastructure.Migrations;
@@ -48,16 +50,19 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 // Configuração para o filter de exception
-builder.Services.AddMvc(options
-    => options.Filters.Add(typeof(ExceptionFilter)));
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
 // Configuração para a DI do projeto de Application e Infrastructure
 builder.Services.AddApplication(builder.Configuration);
 
 // builder.Configuration passado como parâmetro vai servir para recuperar a string de conexão dentro do método AddInfrastructure
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenProvider>();
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+// Configuração para o HttpContextAccessor ser acessível em toda a aplicação
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
