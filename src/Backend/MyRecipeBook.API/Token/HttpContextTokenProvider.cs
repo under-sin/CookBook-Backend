@@ -4,9 +4,9 @@ namespace MyRecipeBook.API.Token;
 
 public class HttpContextTokenProvider : ITokenProvider
 {
-    private readonly HttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public HttpContextTokenProvider(HttpContextAccessor httpContextAccessor)
+    public HttpContextTokenProvider(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

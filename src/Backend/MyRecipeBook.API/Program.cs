@@ -16,10 +16,10 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(option =>
+builder.Services.AddSwaggerGen(options =>
 {
     // Configuração para o swagger mostrar o botão de autenticação   
-    option.AddSecurityDefinition("B(earer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. 
                       Enter 'Bearer' [space] and then your token in the text input below.
@@ -30,21 +30,17 @@ builder.Services.AddSwaggerGen(option =>
         Scheme = "Bearer"
     });
 
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement{
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
+            new OpenApiSecurityScheme{
+                Reference = new OpenApiReference{
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
                 Scheme = "oauth2",
-                Name = "Bearer",
                 In = ParameterLocation.Header
             },
-            new List<string>()
+            new string[]{}
         }
     });
 });

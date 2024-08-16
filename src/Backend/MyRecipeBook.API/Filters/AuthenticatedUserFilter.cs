@@ -66,6 +66,5 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
 
         // Trata o token recebido no header para retornar sem o "Bearer "
         return authentication.Split(" ")[1];
-
     }
 }
