@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                     options.UseInternalServiceProvider(provider);
                 });
 
-                /**
+                /*
                  * Cria um novo escopo para o container de injecao de dependencia
                  * e cria um novo contexto de banco de dados
                  * para que seja possivel adicionar um usuario no banco de dados antes de iniciar os testes
@@ -50,6 +49,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public string GetEmail() => _user.Email;
     public string GetName() => _user.Name;
     public string GetPassword() => _userPassword;
+    public Guid UserIdentifier() => _user.UserIdentifier;
 
     private void StartDatabase(MyRecipeBookDbContext dbContext)
     {

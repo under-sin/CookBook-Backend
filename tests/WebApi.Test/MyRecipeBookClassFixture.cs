@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace WebApi.Test;
@@ -23,6 +24,14 @@ public class MyRecipeBookClassFixture : IClassFixture<CustomWebApplicationFactor
         return await _httpClient.PostAsJsonAsync(method, request);
     }
 
+    protected async Task<HttpResponseMessage> DoGet(string method, string token = "", string culture = "en")
+    {
+        ChangeCultureInto(culture);
+        AuthorizeRequest(token);
+        
+        return await _httpClient.GetAsync(method);
+    }
+
     private void ChangeCultureInto(string culture)
     {
         // remove o cabeçalho Accept-Language caso exista
@@ -31,5 +40,14 @@ public class MyRecipeBookClassFixture : IClassFixture<CustomWebApplicationFactor
 
         // adiciona o cabeçalho Accept-Language com a cultura informada no parâmetro
         _httpClient.DefaultRequestHeaders.Add("Accept-Language", culture);
+    }
+
+    private void AuthorizeRequest(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return;
+        
+        // adiciona o cabeçalho Authorization com o token informado no parâmetro
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 }
