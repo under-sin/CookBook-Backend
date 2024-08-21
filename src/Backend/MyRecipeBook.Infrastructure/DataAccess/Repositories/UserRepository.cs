@@ -12,8 +12,14 @@ public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository
 
     public async Task Add(User user) => await _context.Users.AddAsync(user);
 
+    public void UpdateUserProfile(User user) => _context.Users.Update(user);
+
     public async Task<bool> ExistActiveUserWithEmail(string email)
         => await _context.Users.AnyAsync(e => e.Email.Equals(email) && e.Active);
+
+    public async Task<bool> EmailExistsForOtherUser(string email, Guid userIdentifier)
+        => await _context.Users
+            .AnyAsync(u => u.Email.Equals(email) && u.UserIdentifier != userIdentifier && u.Active);
 
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier) 
         => await _context.Users.AnyAsync(e => e.UserIdentifier.Equals(userIdentifier) && e.Active);

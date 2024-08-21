@@ -2,7 +2,7 @@ using System.Net;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
 
-namespace WebApi.Test.User.Profile;
+namespace WebApi.Test.User.Profile.GetUserProfile;
 
 public class GetUserProfileInvalidTokenTest : MyRecipeBookClassFixture
 {

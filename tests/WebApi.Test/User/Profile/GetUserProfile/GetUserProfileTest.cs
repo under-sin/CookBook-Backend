@@ -1,10 +1,9 @@
-using System;
 using System.Net;
 using System.Text.Json;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
 
-namespace WebApi.Test.User.Profile;
+namespace WebApi.Test.User.Profile.GetUserProfile;
 
 public class GetUserProfileTest : MyRecipeBookClassFixture
 {
