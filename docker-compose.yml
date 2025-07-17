@@ -1,15 +1,15 @@
 ﻿services:
-  mysql:
-    image: mysql:latest
-    container_name: mysql_container
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
-      MYSQL_DATABASE: MyRecipeBookDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: MyRecipeBook
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  mysql_data:
+  postgres_data:

@@ -7,7 +7,7 @@ public class MapperBuilder
 {
     public static IMapper Build()
     {
-        return new AutoMapper.MapperConfiguration(option =>
+        return new MapperConfiguration(option =>
         {
             option.AddProfile(new AutoMapping());
         }).CreateMapper();

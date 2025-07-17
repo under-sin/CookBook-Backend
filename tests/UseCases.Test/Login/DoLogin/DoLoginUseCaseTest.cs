@@ -5,6 +5,7 @@ using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
 using MyRecipeBook.Application;
+using MyRecipeBook.Application.UseCases.User.Login.DoLogin;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
@@ -16,7 +17,7 @@ public class DoLoginUseCaseTest
     [Fact]
     public async Task Success()
     {
-        (var user, var password) = UserBuilder.Build();
+        var (user, password) = UserBuilder.Build();
         var useCase = CreateUseCase(user);
 
         var result = await useCase.Execute(new RequestLoginJson

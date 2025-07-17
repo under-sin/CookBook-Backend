@@ -16,11 +16,9 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
+builder.Services.AddSwaggerGen(options => {
     // Configuração para o swagger mostrar o botão de autenticação   
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
         Description = @"JWT Authorization header using the Bearer scheme. 
                       Enter 'Bearer' [space] and then your token in the text input below.
                       Example: 'Bearer 123abc",
@@ -30,17 +28,17 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement{
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
-            new OpenApiSecurityScheme{
-                Reference = new OpenApiReference{
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 },
                 Scheme = "oauth2",
                 In = ParameterLocation.Header
             },
-            new string[]{}
+            []
         }
     });
 });
@@ -62,26 +60,21 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseMiddleware<CultureMiddleware>();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 MigrateDatabase();
 
 app.Run();
 
-void MigrateDatabase()
-{
+void MigrateDatabase() {
     if (builder.Configuration.IsUnitTestEnvironment())
         return;
 
@@ -91,11 +84,7 @@ void MigrateDatabase()
     DatabaseMigration.Migrate(connectionString, serviceScope.ServiceProvider);
 }
 
-/*
- * É preciso criar esse partial para as configuracoes do Program.cs serem 
- * acessíveis nos testes de integração 
- */
-public partial class Program
-{
+// É preciso criar esse partial para as configuracoes do Program.cs serem acessíveis nos testes de integração
+public partial class Program {
     protected Program() { }
 }

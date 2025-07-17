@@ -1,4 +1,3 @@
-using System;
 using Bogus;
 using CommonTestUtilities.Cryptography;
 using MyRecipeBook.Domain.Entities;

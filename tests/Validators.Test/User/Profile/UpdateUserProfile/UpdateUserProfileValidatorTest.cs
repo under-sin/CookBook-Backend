@@ -5,11 +5,9 @@ using MyRecipeBook.Exceptions;
 
 namespace Validators.Test.User.Profile.UpdateUserProfile;
 
-public class UpdateUserProfileValidatorTest
-{
+public class UpdateUserProfileValidatorTest {
     [Fact]
-    public void Success()
-    {
+    public void Success() {
         var validator = new UpdateUserProfileValidator();
 
         var request = RequestUpdateUserJsonBuilder.Build();
@@ -17,10 +15,9 @@ public class UpdateUserProfileValidatorTest
 
         result.IsValid.Should().BeTrue();
     }
-    
+
     [Fact]
-    public void Error_Name_Empty()
-    {
+    public void Error_Name_Empty() {
         var validator = new UpdateUserProfileValidator();
 
         var request = RequestUpdateUserJsonBuilder.Build();
@@ -34,8 +31,7 @@ public class UpdateUserProfileValidatorTest
     }
 
     [Fact]
-    public void Error_Email_Empty()
-    {
+    public void Error_Email_Empty() {
         var validator = new UpdateUserProfileValidator();
 
         var request = RequestUpdateUserJsonBuilder.Build();

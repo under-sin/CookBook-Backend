@@ -13,10 +13,8 @@ namespace MyRecipeBook.API.Filters;
 
 public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
 {
-
     private readonly IAccessTokenValidator _accessTokenValidator;
     private readonly IUserReadOnlyRepository _repository;
-
 
     public AuthenticatedUserFilter(IAccessTokenValidator accessTokenValidator, IUserReadOnlyRepository repository)
     {
@@ -51,7 +49,8 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
         }
         catch
         {
-            context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(ResourceMessagesException.USER_WITHOUT_PERMISSION));
+            context.Result =
+                new UnauthorizedObjectResult(new ResponseErrorJson(ResourceMessagesException.USER_WITHOUT_PERMISSION));
         }
     }
 

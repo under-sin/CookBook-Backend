@@ -1,6 +1,5 @@
 namespace MyRecipeBook.Domain.Security.Tokens;
 
-public interface ITokenProvider
-{
+public interface ITokenProvider {
     public string Value();
 }

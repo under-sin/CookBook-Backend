@@ -6,10 +6,8 @@ namespace MyRecipeBook.API.Converters;
 
 public partial class StringConverter : JsonConverter<string>
 {
-    /*
-    * O método Read é responsável por ler o valor do JSON e converter para o tipo de dado que está sendo esperado.
-    * Nesse caso, o método está lendo um valor do tipo string e removendo os espaços extras.
-    */
+    // O método Read é responsável por ler o valor do JSON e converter para o tipo de dado que está sendo esperado.
+    // Nesse caso, o método está lendo um valor do tipo string e removendo os espaços extras.
     public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString()?.Trim();
@@ -21,10 +19,10 @@ public partial class StringConverter : JsonConverter<string>
         return RemoveExtraWriteSpaces().Replace(value, " ");
     }
 
-    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) 
+    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
         => writer.WriteStringValue(value);
-    
-    
+
+
     [GeneratedRegex(@"\s+")]
     private static partial Regex RemoveExtraWriteSpaces();
 }
