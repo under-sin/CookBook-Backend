@@ -135,4 +135,13 @@
   <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve">
     <value>Email already in use</value>
   </data>
+  <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
+    <value>E-mail/password invalid</value>
+  </data>
+  <data name="NO_TOKEN" xml:space="preserve">
+    <value>Token not found</value>
+  </data>
+  <data name="USER_WITHOUT_PERMISSION" xml:space="preserve">
+    <value>User without permission</value>
+  </data>
 </root>

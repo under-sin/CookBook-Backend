@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using MyRecipeBook.Application.SharedValidators;
 using MyRecipeBook.Communication.Requests;
+using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Exceptions;
 
 namespace MyRecipeBook.Application.UseCases.User.Register;
@@ -15,12 +17,14 @@ public class RegisterUserValidator : AbstractValidator<RequestRegisterUserJson>
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(ResourceMessagesException.EMAIL_EMPTY)
-            .EmailAddress()
-            .WithMessage(ResourceMessagesException.EMAIL_INVALID);
+            .WithMessage(ResourceMessagesException.EMAIL_EMPTY);
 
-        RuleFor(x => x.Password)
-            .MinimumLength(6)
-            .WithMessage(ResourceMessagesException.PASSWORD_EMPTY);
+        RuleFor(x => x.Password).SetValidator(new PasswordValidator<RequestRegisterUserJson>());
+
+        // se o email não for vazio, então valida se é um email válido
+        When(user => string.IsNullOrEmpty(user.Email).IsFalse(), () =>
+        {
+            RuleFor(x => x.Email).EmailAddress().WithMessage(ResourceMessagesException.EMAIL_INVALID);
+        });
     }
 }

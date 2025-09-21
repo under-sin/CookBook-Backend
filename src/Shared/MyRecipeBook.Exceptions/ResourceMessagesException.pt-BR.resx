@@ -36,4 +36,13 @@
     <data name="EMAIL_ALREADY_IN_USE" xml:space="preserve">
         <value>E-mail já em uso.</value>
     </data>
+    <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
+        <value>E-mail/senha invalido</value>
+    </data>
+    <data name="NO_TOKEN" xml:space="preserve">
+        <value>Token não encontrado</value>
+    </data>
+    <data name="USER_WITHOUT_PERMISSION" xml:space="preserve">
+        <value>Usuário sem permissão</value>
+    </data>
 </root>

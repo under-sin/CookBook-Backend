@@ -7,29 +7,28 @@ using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.API.Filters;
 
-public class ExceptionFilter : IExceptionFilter
-{
-    public void OnException(ExceptionContext context)
-    {
+public class ExceptionFilter : IExceptionFilter {
+    public void OnException(ExceptionContext context) {
         if (context.Exception is MyRecipeBookException)
             HandleProjectException(context);
         else
             HandleUnknownException(context);
     }
 
-    private void HandleProjectException(ExceptionContext context)
-    {
-        if (context.Exception is ErrorOnValidationException)
-        {
+    private static void HandleProjectException(ExceptionContext context) {
+        if (context.Exception is ErrorOnValidationException) {
             var exception = context.Exception as ErrorOnValidationException;
 
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception!.ErrorMessages));
         }
+        else if (context.Exception is InvalidLoginException) {
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(context.Exception.Message));
+        }
     }
 
-    private void HandleUnknownException(ExceptionContext context)
-    {
+    private static void HandleUnknownException(ExceptionContext context) {
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson(ResourceMessagesException.UNKNOWN_ERROR));
     }

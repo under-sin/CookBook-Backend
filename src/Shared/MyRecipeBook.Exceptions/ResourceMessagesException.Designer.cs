@@ -112,5 +112,36 @@ namespace MyRecipeBook.Exceptions {
                 return ResourceManager.GetString("UNKNOWN_ERROR", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail/password invalid..
+        /// </summary>
+        public static string EMAIL_OR_PASSWORD_INVALID {
+            get {
+                return ResourceManager.GetString("EMAIL_OR_PASSWORD_INVALID", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No token..
+        /// </summary>
+        public static string NO_TOKEN
+        {
+            get
+            {
+                return ResourceManager.GetString("NO_TOKEN", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to User without permission..
+        /// </summary>
+        public static string USER_WITHOUT_PERMISSION
+        {
+            get
+            {
+                return ResourceManager.GetString("USER_WITHOUT_PERMISSION", resourceCulture);
+            }
+        }
     }
 }
