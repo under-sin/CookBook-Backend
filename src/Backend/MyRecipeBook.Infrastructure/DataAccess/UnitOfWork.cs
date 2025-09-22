@@ -2,11 +2,7 @@
 
 namespace MyRecipeBook.Infrastructure.DataAccess;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(MyRecipeBookDbContext context) : IUnitOfWork
 {
-    private readonly MyRecipeBookDbContext _context;
-
-    public UnitOfWork(MyRecipeBookDbContext context) => _context = context;
-
-    public async Task Commit() => await _context.SaveChangesAsync();
+    public async Task Commit() => await context.SaveChangesAsync();
 }
