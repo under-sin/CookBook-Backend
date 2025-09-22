@@ -1,7 +1,10 @@
-﻿services:
+﻿version: "3.8"
+
+services:
   postgres:
-    image: postgres:latest
-    container_name: postgres_container
+    image: postgres:15     # Use uma versão estável
+    container_name: postgres_db
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

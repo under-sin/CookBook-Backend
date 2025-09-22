@@ -19,7 +19,7 @@ public class PasswordValidator<T> : PropertyValidator<T, string>
 
         if (password.Length < 6)
         {
-            context.MessageFormatter.AppendArgument("ErrorMessage", "Password must be at least 6 characters long.");
+            context.MessageFormatter.AppendArgument("ErrorMessage", ResourceMessagesException.INVALID_PASSWORD);
             return false;
         }
 

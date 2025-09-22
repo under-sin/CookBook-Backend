@@ -45,4 +45,7 @@
     <data name="USER_WITHOUT_PERMISSION" xml:space="preserve">
         <value>Usuário sem permissão</value>
     </data>
+    <data name="INVALID_PASSWORD" xml:space="preserve">
+        <value>Senha no formato inválido</value>
+    </data>
 </root>
