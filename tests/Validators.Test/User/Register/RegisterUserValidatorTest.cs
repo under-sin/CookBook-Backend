@@ -80,6 +80,21 @@ public class RegisterUserValidatorTest
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().ContainSingle()
-            .And.Contain(e => e.ErrorMessage.Equals("Password must be at least 6 characters long."));
+            .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesException.INVALID_PASSWORD));
+    }
+    
+    [Fact]
+    public void Error_Password_Empty()
+    {
+        var validator = new RegisterUserValidator();
+
+        var request = RequestRegisterUserJsonBuilder.Build();
+        request.Password = string.Empty;
+
+        var result = validator.Validate(request);
+
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().ContainSingle()
+            .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesException.PASSWORD_EMPTY));
     }
 }

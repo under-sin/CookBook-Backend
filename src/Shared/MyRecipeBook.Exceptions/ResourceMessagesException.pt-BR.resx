@@ -48,4 +48,7 @@
     <data name="INVALID_PASSWORD" xml:space="preserve">
         <value>Senha no formato inválido</value>
     </data>
+    <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
+        <value>Senha atual incorreta.</value>
+    </data>
 </root>

@@ -4,29 +4,15 @@ using MyRecipeBook.Domain.Repositories.Users;
 
 namespace CommonTestUtilities.Repositories;
 
-public class UserReadOnlyRepositoryBuilder
+public class UserUpdateOnlyRepositoryBuilder
 {
-    /*
-    * No caso dos mocks de Read não podemos cria-los como static 
-    * pois eles podem ter retorno e precisam ser configurados
-    * Nesse caso precisamos criar uma instância do Mock<IUserReadOnlyRepository>()
-    */
-    private readonly Mock<IUserReadOnlyRepository> _repository;
+    private readonly Mock<IUserUpdateOnlyRepository> _repository = new();
 
-    public UserReadOnlyRepositoryBuilder() => 
-        _repository = new Mock<IUserReadOnlyRepository>();
-
-    public void ExistActiveUserWithEmail(string email)
+    public void GetBeId(User user)
     {
-        // Configuração do mock para o método ExistActiveUserWithEmail retornar true
-        _repository.Setup(rep => rep.ExistActiveUserWithEmail(email))
-            .ReturnsAsync(true);
-    }
-
-    public void GetUserByEmailAndPassword(User user) {
-        _repository.Setup(rep => rep.GetUserByEmailAndPassword(user.Email, user.Password))
+        _repository.Setup(rep => rep.GetByIdAsync(user.Id))
             .ReturnsAsync(user);
     }
     
-    public IUserReadOnlyRepository Build() => _repository.Object;
+    public IUserUpdateOnlyRepository Build() => _repository.Object;
 }
