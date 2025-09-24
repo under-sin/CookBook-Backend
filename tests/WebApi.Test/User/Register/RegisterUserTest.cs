@@ -8,11 +8,9 @@ using WebApi.Test.InlineData;
 
 namespace WebApi.Test.User.Register;
 
-public class RegisterUserTest : MyRecipeBookClassFixture
+public class RegisterUserTest(CustomWebApplicationFactory factory) : MyRecipeBookClassFixture(factory)
 {
-    private readonly string _method = "user";
-
-    public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) { }
+    private const string _method = "user";
 
     [Fact]
     public async Task Success()

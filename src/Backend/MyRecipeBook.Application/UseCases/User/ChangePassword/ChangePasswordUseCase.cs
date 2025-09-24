@@ -31,7 +31,7 @@ public class ChangePasswordUseCase(
         await unitOfWork.Commit();
     }
 
-    public void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) {
+    private void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) {
         var result = new ChangePasswordValidator().Validate(request);
 
         var currentPasswordEncrypted = encripter.Encrypt(request.Password);
