@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Application.Services.AutoMapper;
+using MyRecipeBook.Application.UseCases.Login.DoLogin;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
-using MyRecipeBook.Application.UseCases.User.Login.DoLogin;
 using MyRecipeBook.Application.UseCases.User.Profile.GetUserProfile;
 using MyRecipeBook.Application.UseCases.User.Profile.UpdateUserProfile;
 using MyRecipeBook.Application.UseCases.User.Register;
