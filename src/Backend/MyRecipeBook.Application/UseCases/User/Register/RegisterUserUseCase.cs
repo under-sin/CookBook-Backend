@@ -53,7 +53,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase {
         };
     }
 
-    public async Task Validate(RequestRegisterUserJson request) {
+    private async Task Validate(RequestRegisterUserJson request) {
         var validator = new RegisterUserValidator();
         var result = validator.Validate(request);
 

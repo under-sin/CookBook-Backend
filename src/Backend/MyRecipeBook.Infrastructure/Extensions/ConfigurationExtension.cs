@@ -5,7 +5,7 @@ namespace MyRecipeBook.Infrastructure.Extensions;
 public static class ConfigurationExtension {
     /* Configuração para fazer a verificação se estamos em ambiente de test ou não */
     public static bool IsUnitTestEnvironment(this IConfiguration configuration) {
-        string inMemoryTestValue = configuration.GetSection("InMemoryTest").Value!;
+        var inMemoryTestValue = configuration.GetSection("InMemoryTest").Value!;
         if (inMemoryTestValue is null)
             return false;
 

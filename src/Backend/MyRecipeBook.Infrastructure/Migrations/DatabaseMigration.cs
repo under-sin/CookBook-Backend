@@ -13,25 +13,22 @@ public static class DatabaseMigration {
         MigrateDatabase(serviceProvider);
     }
 
-    public static void EnsureDatabase(string connectionString) {
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+    private static void EnsureDatabase(string connectionString) {
+        var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
         var databaseName = connectionStringBuilder.Database;
 
         connectionStringBuilder.Database = null;
         connectionStringBuilder.Remove("Database");
 
-        using var dbConnection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
+        using var dbConnection = new MySqlConnection(connectionStringBuilder.ConnectionString);
 
         var parameters = new DynamicParameters();
         parameters.Add("dbname", databaseName);
 
-        var records = dbConnection.Query(
-            $"SELECT 1 FROM pg_database WHERE datname = @dbname",
-            parameters
-        );
+        var records = dbConnection.Query("SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = @dbname", parameters);
 
         if (records.Any().IsFalse())
-            dbConnection.Execute($"CREATE DATABASE \"{databaseName}\"");
+            dbConnection.Execute($"CREATE DATABASE {databaseName}");
     }
 
     private static void MigrateDatabase(IServiceProvider serviceProvider) {

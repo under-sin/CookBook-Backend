@@ -4,25 +4,32 @@ using MyRecipeBook.Domain.Repositories.Users;
 
 namespace MyRecipeBook.Infrastructure.DataAccess.Repositories;
 
-public class UserRepository(MyRecipeBookDbContext context)
+public class UserRepository
     : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository
 {
-    public async Task Add(User user) => await context.Users.AddAsync(user);
+    private readonly MyRecipeBookDbContext _context;
 
-    public void UpdateUserProfile(User user) => context.Users.Update(user);
+    public UserRepository(MyRecipeBookDbContext context)
+    {
+        _context = context;
+    }
+    
+    public async Task Add(User user) => await _context.Users.AddAsync(user);
+
+    public void UpdateUserProfile(User user) => _context.Users.Update(user);
 
     public async Task<bool> ExistActiveUserWithEmail(string email)
-        => await context.Users.AnyAsync(e => e.Email.Equals(email) && e.Active);
+        => await _context.Users.AnyAsync(e => e.Email.Equals(email) && e.Active);
 
     public async Task<bool> EmailExistsForOtherUser(string email, Guid userIdentifier)
-        => await context.Users
+        => await _context.Users
             .AnyAsync(u => u.Email.Equals(email) && u.UserIdentifier != userIdentifier && u.Active);
 
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier)
-        => await context.Users.AnyAsync(e => e.UserIdentifier.Equals(userIdentifier) && e.Active);
+        => await _context.Users.AnyAsync(e => e.UserIdentifier.Equals(userIdentifier) && e.Active);
 
     public async Task<User?> GetUserByEmailAndPassword(string email, string password) {
-        return await context.Users
+        return await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(user => user.Active
                                          && user.Email.Equals(email)
@@ -31,7 +38,7 @@ public class UserRepository(MyRecipeBookDbContext context)
 
     public async Task<User> GetByIdAsync(long userId)
     {
-        var user = await context.Users
+        var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Id == userId && u.Active);
 
         return user ?? throw new KeyNotFoundException("User not found.");
@@ -41,6 +48,6 @@ public class UserRepository(MyRecipeBookDbContext context)
     {
         // Garante que as datas sejam tratadas como UTC
         user.CreatedOn = DateTime.SpecifyKind(user.CreatedOn, DateTimeKind.Utc);
-        context.Users.Update(user);
+        _context.Users.Update(user);
     }
 }
