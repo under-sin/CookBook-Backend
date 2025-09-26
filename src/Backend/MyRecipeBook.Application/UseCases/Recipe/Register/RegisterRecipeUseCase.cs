@@ -8,7 +8,7 @@ using MyRecipeBook.Domain.Repositories.Recipes;
 using MyRecipeBook.Domain.Services.LoggedUser;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
-namespace MyRecipeBook.Application.UseCases.Recipe;
+namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
 public class RegisterRecipeUseCase(
     IRecipeWriteOnlyRepository repository,

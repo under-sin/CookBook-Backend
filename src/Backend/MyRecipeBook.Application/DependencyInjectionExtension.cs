@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Application.Services.AutoMapper;
 using MyRecipeBook.Application.UseCases.Login.DoLogin;
 using MyRecipeBook.Application.UseCases.Recipe;
+using MyRecipeBook.Application.UseCases.Recipe.Register;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
 using MyRecipeBook.Application.UseCases.User.Profile.GetUserProfile;
 using MyRecipeBook.Application.UseCases.User.Profile.UpdateUserProfile;
