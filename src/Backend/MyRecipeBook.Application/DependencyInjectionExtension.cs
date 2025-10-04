@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Application.Services.AutoMapper;
 using MyRecipeBook.Application.UseCases.Login.DoLogin;
-using MyRecipeBook.Application.UseCases.Recipe;
 using MyRecipeBook.Application.UseCases.Recipe.Filter;
+using MyRecipeBook.Application.UseCases.Recipe.GetById;
 using MyRecipeBook.Application.UseCases.Recipe.Register;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
 using MyRecipeBook.Application.UseCases.User.Profile.GetUserProfile;
@@ -19,22 +19,31 @@ public static class DependencyInjectionExtension
     // esse método preciso ser um IServiceCollection para que possa ser chamado no Program.cs
     public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        AddAutoMapper(services, configuration);
+        AddAutoMapper(services);
+        AddIdEnconder(services, configuration);
         AddUseCase(services);
     }
 
-    private static void AddAutoMapper(IServiceCollection services, IConfiguration configuration)
+    private static void AddAutoMapper(IServiceCollection services)
+    {
+        services.AddScoped(option => new AutoMapper.MapperConfiguration(autoMapperOptions =>
+        {
+            // recupera a instancia do serviço de SqidsEncoder<long> que foi registrado no método AddIdEnconder
+            var sqids = option.GetService<SqidsEncoder<long>>()!;
+
+            autoMapperOptions.AddProfile(new AutoMapping(sqids)); 
+        }).CreateMapper());
+    }
+
+    private static void AddIdEnconder(IServiceCollection services, IConfiguration configuration)
     {
         var sqids = new SqidsEncoder<long>(new()
         {
             MinLength = 3,
             Alphabet = configuration.GetValue<string>("Settings:IdCryptographyAlphabet")!
         });
-        services.AddScoped(options =>
-            new AutoMapper.MapperConfiguration(option =>
-            {
-                option.AddProfile(new AutoMapping(sqids)); 
-            }).CreateMapper());
+
+        services.AddSingleton(sqids);
     }
 
     private static void AddUseCase(IServiceCollection services)
@@ -46,5 +55,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IChangePasswordUseCase, ChangePasswordUseCase>();
         services.AddScoped<IRegisterRecipeUseCase, RegisterRecipeUseCase>();
         services.AddScoped<IFilterRecipeUseCase, FilterRecipeUseCase>();
+        services.AddScoped<IGetRecipeByIdUseCase, GetRecipeByIdUseCase>();
     }
 }

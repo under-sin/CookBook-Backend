@@ -16,17 +16,17 @@ public class FilterRecipeTest : MyRecipeBookClassFixture
     private const string METHOD = "recipe/filter";
     private readonly Guid _userIdentifier;
 
-    private string _recipeTitle;
-    private Difficulty _difficulty;
-    private CookingTime _cookingTime;
-    private IList<DishType> _dishTypes;
+    private readonly string _recipeTitle;
+    private readonly Difficulty _difficulty;
+    private readonly CookingTime _cookingTime;
+    private readonly IList<DishType> _dishTypes;
 
     public FilterRecipeTest(CustomWebApplicationFactory factory) : base(factory)
     {
         _userIdentifier = factory.UserIdentifier();
         _recipeTitle = factory.GetRecipeTitle();
 
-        // é necessário pegar essas campos para validar os ifs no repositorio do filtro e o sonnar não reclamar
+        // ï¿½ necessï¿½rio pegar essas campos para validar os ifs no repositorio do filtro e o sonnar nï¿½o reclamar
         _difficulty = factory.GetRecipeDifficulty();
         _cookingTime = factory.GetRecipeCookingTime();
         _dishTypes = factory.GetDishTypes();
@@ -56,11 +56,11 @@ public class FilterRecipeTest : MyRecipeBookClassFixture
         responseData.RootElement.GetProperty("recipes").EnumerateArray().Should().NotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact]  
     public async Task Success_NoContent()
     {
-        var request = RequestRecipeJsonBuilder.Build();
-        request.Title = "recipeDontExist";
+        var request = RequestFilterRecipeJsonBuilder.Build();
+        request.RecipeTitle_Ingredient = "recipeDontExist";
 
         var token = JwtTokensGeneratorBuilder.Build().Generator(_userIdentifier);
 
