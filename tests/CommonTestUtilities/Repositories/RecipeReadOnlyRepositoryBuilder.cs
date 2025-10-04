@@ -21,5 +21,13 @@ public class RecipeReadOnlyRepositoryBuilder
         return this;
     }
 
+    public RecipeReadOnlyRepositoryBuilder GetById(User user, Recipe? recipe = null)
+    {
+        if (recipe is not null)
+            _repository.Setup(rep => rep.GetById(user, It.IsAny<long>())).ReturnsAsync(recipe);
+
+        return this;
+    }
+
     public IRecipeReadOnlyRepository Build() => _repository.Object;
 }
