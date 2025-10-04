@@ -8,7 +8,6 @@ using MyRecipeBook.Application.UseCases.Recipe.Filter;
 using MyRecipeBook.Communication.Enums;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
-using System.ComponentModel.DataAnnotations;
 
 namespace UseCases.Test.Recipe.Filter;
 

@@ -25,6 +25,8 @@ public class FilterRecipeTest : MyRecipeBookClassFixture
     {
         _userIdentifier = factory.UserIdentifier();
         _recipeTitle = factory.GetRecipeTitle();
+
+        // é necessário pegar essas campos para validar os ifs no repositorio do filtro e o sonnar não reclamar
         _difficulty = factory.GetRecipeDifficulty();
         _cookingTime = factory.GetRecipeCookingTime();
         _dishTypes = factory.GetDishTypes();

@@ -183,4 +183,7 @@
   <data name="AT_LEAST_ONE_INSTRUCTION" xml:space="preserve">
     <value>At least one instruction must be provided.</value>
   </data>
+  <data name="RECIPE_NOT_FOUND" xml:space="preserve">
+    <value>Recipe not found.</value>
+  </data>
 </root>
