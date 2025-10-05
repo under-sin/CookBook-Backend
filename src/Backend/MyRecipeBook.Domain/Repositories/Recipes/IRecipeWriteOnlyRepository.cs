@@ -4,5 +4,6 @@ namespace MyRecipeBook.Domain.Repositories.Recipes;
 
 public interface IRecipeWriteOnlyRepository
 {
-    public Task Add(Recipe recipe);
+    Task Add(Recipe recipe);
+    Task Delete(long recipeId);
 }

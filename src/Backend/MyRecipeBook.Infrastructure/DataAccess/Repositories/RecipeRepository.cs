@@ -20,13 +20,13 @@ public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyR
 
         if (filter.Difficulties.Any())
         {
-            query = query.Where(recipe => recipe.Difficulty.HasValue 
+            query = query.Where(recipe => recipe.Difficulty.HasValue
                 && filter.Difficulties.Contains(recipe.Difficulty.Value));
         }
 
         if (filter.CookingTimes.Any())
         {
-            query = query.Where(recipe => recipe.CookingTime.HasValue 
+            query = query.Where(recipe => recipe.CookingTime.HasValue
                 && filter.CookingTimes.Contains(recipe.CookingTime.Value));
         }
 
@@ -42,6 +42,13 @@ public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyR
         }
 
         return await query.ToListAsync();
+    }
+
+    public async Task Delete(long recipeId)
+    {
+        // Nao é necessário verificar se a receita existe, pois isso já foi feito no UseCase
+        var recipe = await context.Recipes.FindAsync(recipeId);
+        context.Recipes.Remove(recipe!);
     }
 
     public async Task<Recipe?> GetById(User user, long recipeId)
