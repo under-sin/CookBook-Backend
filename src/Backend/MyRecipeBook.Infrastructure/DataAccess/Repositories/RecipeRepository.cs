@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using MyRecipeBook.Domain.Dtos;
 using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Extensions;
@@ -6,7 +7,8 @@ using MyRecipeBook.Domain.Repositories.Recipes;
 
 namespace MyRecipeBook.Infrastructure.DataAccess.Repositories;
 
-public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository
+public class RecipeRepository(MyRecipeBookDbContext context)
+    : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository, IRecipeUpdateOnlyRepository
 {
     public async Task Add(Recipe recipe) => await context.Recipes.AddAsync(recipe);
 
@@ -51,14 +53,31 @@ public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyR
         context.Recipes.Remove(recipe!);
     }
 
-    public async Task<Recipe?> GetById(User user, long recipeId)
+    // Implementação explícita para evitar conflitos de método entre as interfaces
+    async Task<Recipe?> IRecipeReadOnlyRepository.GetById(User user, long recipeId)
     {
-        return await context
-            .Recipes
+        return await GetFullRecipe()
             .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Active && r.Id == recipeId && r.UserId == user.Id);
+    }
+
+    async Task<Recipe?> IRecipeUpdateOnlyRepository.GetById(User user, long recipeId)
+    {
+        return await GetFullRecipe()
+            .FirstOrDefaultAsync(r => r.Active && r.Id == recipeId && r.UserId == user.Id);
+    }
+
+    public void Update(Recipe recipe)
+    {
+        context.Update(recipe);
+    }
+
+    private IIncludableQueryable<Recipe, IList<DishType>> GetFullRecipe()
+    {
+        return context
+            .Recipes
             .Include(r => r.Ingredients)
             .Include(r => r.Instructions)
-            .Include(r => r.DishTypes)
-            .FirstOrDefaultAsync(r => r.Active && r.Id == recipeId && r.UserId == user.Id);
+            .Include(r => r.DishTypes);
     }
 }

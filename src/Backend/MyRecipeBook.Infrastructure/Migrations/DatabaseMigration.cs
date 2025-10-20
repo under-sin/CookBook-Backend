@@ -3,7 +3,6 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Domain.Extensions;
 using MySqlConnector;
-using Npgsql;
 
 namespace MyRecipeBook.Infrastructure.Migrations;
 
