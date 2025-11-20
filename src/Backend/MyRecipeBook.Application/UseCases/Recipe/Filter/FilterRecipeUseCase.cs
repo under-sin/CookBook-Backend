@@ -29,7 +29,7 @@ public class FilterRecipeUseCase : IFilterRecipeUseCase
 
         var filters = new Domain.Dtos.FilterRecipeDto
         {
-            RecipeTitle_Ingredient = request.RecipeTitle_Ingredient,
+            RecipeTitleIngredient = request.RecipeTitle_Ingredient,
             CookingTimes = request.CookingTimes.Distinct().Select(c => (Domain.Enums.CookingTime)c).ToList(),
             Difficulties = request.Difficulties.Distinct().Select(c => (Domain.Enums.Difficulty)c).ToList(),
             DishTypes = request.DishTypes.Distinct().Select(c => (Domain.Enums.DishType)c).ToList(),

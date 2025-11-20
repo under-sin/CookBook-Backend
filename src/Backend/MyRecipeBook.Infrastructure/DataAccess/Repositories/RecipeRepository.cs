@@ -37,10 +37,10 @@ public class RecipeRepository(MyRecipeBookDbContext context)
             query = query.Where(recipe => recipe.DishTypes.Any(dishType => filter.DishTypes.Contains(dishType.Type)));
         }
 
-        if (filter.RecipeTitle_Ingredient.NotEmpty())
+        if (filter.RecipeTitleIngredient.NotEmpty())
         {
-            query = query.Where(recipe => recipe.Title.Contains(filter.RecipeTitle_Ingredient)
-                || recipe.Ingredients.Any(ingredient => ingredient.Item.Contains(filter.RecipeTitle_Ingredient)));
+            query = query.Where(recipe => recipe.Title.Contains(filter.RecipeTitleIngredient)
+                || recipe.Ingredients.Any(ingredient => ingredient.Item.Contains(filter.RecipeTitleIngredient)));
         }
 
         return await query.ToListAsync();
@@ -59,6 +59,18 @@ public class RecipeRepository(MyRecipeBookDbContext context)
         return await GetFullRecipe()
             .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Active && r.Id == recipeId && r.UserId == user.Id);
+    }
+
+    public async Task<IList<Recipe>> GetDashboards(User user)
+    {
+        return await context
+            .Recipes
+            .AsNoTracking()
+            .Include(x => x.Ingredients)
+            .Where(r => r.Active && r.UserId == user.Id)
+            .OrderByDescending(r => r.CreatedOn)
+            .Take(5)
+            .ToListAsync();
     }
 
     async Task<Recipe?> IRecipeUpdateOnlyRepository.GetById(User user, long recipeId)
