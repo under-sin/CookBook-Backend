@@ -176,5 +176,23 @@ namespace MyRecipeBook.Exceptions {
                 return ResourceManager.GetString("AT_LEAST_ONE_INSTRUCTION", resourceCulture);
             }
         }
+        
+        internal static string RECIPE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RECIPE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        internal static string INVALID_NUMBER_INGREDIENTS {
+            get {
+                return ResourceManager.GetString("INVALID_NUMBER_INGREDIENTS", resourceCulture);
+            }
+        }
+        
+        internal static string DUPLICATED_INGREDIENTS {
+            get {
+                return ResourceManager.GetString("DUPLICATED_INGREDIENTS", resourceCulture);
+            }
+        }
     }
 }
