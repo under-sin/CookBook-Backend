@@ -7,26 +7,15 @@ using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.Login.DoLogin;
 
-public class DoLoginUseCase : IDoLoginUseCase
+public class DoLoginUseCase(
+    IUserReadOnlyRepository userRepository,
+    IAccessTokenGenerator accessTokenGenerator,
+    IPasswordEncripter passwordEncripter) : IDoLoginUseCase
 {
-    private readonly IUserReadOnlyRepository _userRepository;
-    private readonly IPasswordEncripter _passwordEncripter;
-    private readonly IAccessTokenGenerator _accessTokenGenerator;
-
-    public DoLoginUseCase(
-        IUserReadOnlyRepository userRepository,
-        IAccessTokenGenerator accessTokenGenerator,
-        IPasswordEncripter passwordEncripter)
-    {
-        _userRepository = userRepository;
-        _accessTokenGenerator = accessTokenGenerator;
-        _passwordEncripter = passwordEncripter;
-    }
-
     public async Task<ResponseRegisterUserJson> Execute(RequestLoginJson request)
     {
-        var encryptedPassword = _passwordEncripter.Encrypt(request.Password);
-        var user = await _userRepository.GetUserByEmailAndPassword(request.Email, encryptedPassword)
+        var encryptedPassword = passwordEncripter.Encrypt(request.Password);
+        var user = await userRepository.GetUserByEmailAndPassword(request.Email, encryptedPassword)
                    ?? throw new InvalidLoginException();
 
         return new ResponseRegisterUserJson
@@ -34,7 +23,7 @@ public class DoLoginUseCase : IDoLoginUseCase
             Name = user.Name,
             Tokens = new ResponseTokensJson
             {
-                AccessToken = _accessTokenGenerator.Generator(user.UserIdentifier)
+                AccessToken = accessTokenGenerator.Generator(user.UserIdentifier)
             }
         };
     }
