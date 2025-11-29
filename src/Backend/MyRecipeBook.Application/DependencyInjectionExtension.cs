@@ -6,6 +6,7 @@ using MyRecipeBook.Application.UseCases.Login.DoLogin;
 using MyRecipeBook.Application.UseCases.Recipe.Delete;
 using MyRecipeBook.Application.UseCases.Recipe.Filter;
 using MyRecipeBook.Application.UseCases.Recipe.GetById;
+using MyRecipeBook.Application.UseCases.Recipe.Image;
 using MyRecipeBook.Application.UseCases.Recipe.Register;
 using MyRecipeBook.Application.UseCases.Recipe.Update;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
@@ -45,7 +46,7 @@ public static class DependencyInjectionExtension
             MinLength = 3,
             Alphabet = configuration.GetValue<string>("Settings:IdCryptographyAlphabet")!
         });
-
+    
         services.AddSingleton(sqids);
     }
 
@@ -62,5 +63,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IDeleteRecipeUseCase, DeleteRecipeUseCase>();
         services.AddScoped<IUpdateRecipeUseCase, UpdateRecipeUseCase>();
         services.AddScoped<IDashboardUseCase, DashboardUseCase>();
+        services.AddScoped<IUploadImageCoverUseCase, UploadImageCoverUseCase>();
     }
 }
