@@ -37,6 +37,7 @@ public static class DependencyInjectionExtension
         AddDbContext_MySql(services, configuration);
         AddFluentMigrator_MySql(services, configuration);
     }
+    
     private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();

@@ -6,13 +6,16 @@ using MySqlConnector;
 
 namespace MyRecipeBook.Infrastructure.Migrations;
 
-public static class DatabaseMigration {
-    public static void Migrate(string connectionString, IServiceProvider serviceProvider) {
+public static class DatabaseMigration
+{
+    public static void Migrate(string connectionString, IServiceProvider serviceProvider)
+    {
         EnsureDatabase(connectionString);
         MigrateDatabase(serviceProvider);
     }
 
-    private static void EnsureDatabase(string connectionString) {
+    private static void EnsureDatabase(string connectionString)
+    {
         var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
         var databaseName = connectionStringBuilder.Database;
 
@@ -30,7 +33,8 @@ public static class DatabaseMigration {
             dbConnection.Execute($"CREATE DATABASE {databaseName}");
     }
 
-    private static void MigrateDatabase(IServiceProvider serviceProvider) {
+    private static void MigrateDatabase(IServiceProvider serviceProvider)
+    {
         var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
 
         // Lista todas as migrations que vai ta dentro do versions
