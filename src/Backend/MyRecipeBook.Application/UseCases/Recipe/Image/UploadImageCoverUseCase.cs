@@ -19,6 +19,13 @@ public class UploadImageCoverUseCase(
 {
     public async Task Execute(long recipeId, IFormFile file)
     {
+        var user = await loggedUser.User();
+
+        var recipe = await repository.GetById(user, recipeId);
+
+        if (recipe is null)
+            throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
+        
         var fileStream = file.OpenReadStream();
 
         if (fileStream.Is<PortableNetworkGraphic>().IsFalse() 
@@ -26,13 +33,6 @@ public class UploadImageCoverUseCase(
         {
             throw new ErrorOnValidationException([ResourceMessagesException.INVALID_IMAGE_FORMAT]);
         }
-
-        var user = await loggedUser.User();
-
-        var recipe = await repository.GetById(user, recipeId);
-
-        if (recipe is null)
-            throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
 
         if (string.IsNullOrEmpty(recipe.ImageIdentifier))
         {
