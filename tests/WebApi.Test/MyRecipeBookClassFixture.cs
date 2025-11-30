@@ -24,6 +24,20 @@ public class MyRecipeBookClassFixture : IClassFixture<CustomWebApplicationFactor
 
         return await _httpClient.PostAsJsonAsync(method, request);
     }
+    
+    protected async Task<HttpResponseMessage> DoPostFormData(
+        string method, 
+        object request, 
+        string token = "", 
+        string culture = "en")
+    {
+        ChangeCultureInto(culture);
+        AuthorizeRequest(token);
+        
+        var multiPartContent = new MultipartFormDataContent();
+
+        return await _httpClient.PostAsync(method, multiPartContent);
+    }
 
     protected async Task<HttpResponseMessage> DoPut(string method, object request, string token, string culture = "en")
     {

@@ -32,6 +32,7 @@ public static class RecipeBuilder
             .RuleFor(recipe => recipe.Title, f => f.Lorem.Word())
             .RuleFor(recipe => recipe.CookingTime, f => f.PickRandom<CookingTime>())
             .RuleFor(recipe => recipe.Difficulty, f => f.PickRandom<Difficulty>())
+            .RuleFor(recipe => recipe.ImageIdentifier, _ => $"{Guid.NewGuid()}.jpg")
             .RuleFor(recipe => recipe.Ingredients, f => f.Make(1, () => new Ingredient
             {
                 Id = 1,
