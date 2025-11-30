@@ -2,35 +2,31 @@
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Recipes;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.Recipe.Delete;
 
-public class DeleteRecipeUseCase : IDeleteRecipeUseCase
+public class DeleteRecipeUseCase(
+    IRecipeWriteOnlyRepository writeOnlyRepository,
+    IRecipeReadOnlyRepository readOnlyRepository,
+    ILoggedUser user,
+    IUnitOfWork unitOfWork,
+    IBlobStorageService blobStorageService) : IDeleteRecipeUseCase
 {
-    private readonly IRecipeWriteOnlyRepository _writeOnlyRepository;
-    private readonly IRecipeReadOnlyRepository _readOnlyRepository;
-    private readonly ILoggedUser _loggedUser;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public DeleteRecipeUseCase(IRecipeWriteOnlyRepository writeOnlyRepository, IRecipeReadOnlyRepository readOnlyRepository, ILoggedUser loggedUser, IUnitOfWork unitOfWork)
-    {
-        _writeOnlyRepository = writeOnlyRepository;
-        _readOnlyRepository = readOnlyRepository;
-        _loggedUser = loggedUser;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task Execute(long recipeId)
     {
-        var loggedUser = await _loggedUser.User();
-        var recipe = await _readOnlyRepository.GetById(loggedUser, recipeId);
+        var loggedUser = await user.User();
+        var recipe = await readOnlyRepository.GetById(loggedUser, recipeId);
 
         if (recipe is null)
             throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
 
-        await _writeOnlyRepository.Delete(recipeId);
-        await _unitOfWork.Commit();
+        if (!string.IsNullOrEmpty(recipe.ImageIdentifier))
+            await blobStorageService.DeleteFile(loggedUser, recipe.ImageIdentifier);
+        
+        await writeOnlyRepository.Delete(recipeId);
+        await unitOfWork.Commit();
     }
 }
