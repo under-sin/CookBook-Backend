@@ -5,6 +5,7 @@ using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Recipes;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
@@ -13,7 +14,8 @@ namespace MyRecipeBook.Application.UseCases.Recipe.Image;
 public class UploadImageCoverUseCase(
     IRecipeUpdateOnlyRepository repository,
     ILoggedUser loggedUser,
-    IUnitOfWork unitOfWork) : IUploadImageCoverUseCase
+    IUnitOfWork unitOfWork,
+    IBlobStorageService blobStorageService) : IUploadImageCoverUseCase
 {
     public async Task Execute(long recipeId, IFormFile file)
     {
@@ -32,5 +34,18 @@ public class UploadImageCoverUseCase(
         if (recipe is null)
             throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
 
+        if (string.IsNullOrEmpty(recipe.ImageIdentifier))
+        {
+            recipe.ImageIdentifier = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            
+            repository.Update(recipe);
+            
+            await unitOfWork.Commit();
+        }
+        
+        // Reset stream position before upload
+        fileStream.Position = 0;
+        
+        await blobStorageService.Upload(user, fileStream, recipe.ImageIdentifier);
     }
 }

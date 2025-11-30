@@ -9,17 +9,12 @@ using MyRecipeBook.Infrastructure.DataAccess;
 
 namespace MyRecipeBook.Infrastructure.Services.LoggedUser;
 
-public class LoggedUser : ILoggedUser {
-    private readonly MyRecipeBookDbContext _context;
-    private readonly ITokenProvider _tokenProvider;
-
-    public LoggedUser(MyRecipeBookDbContext context, ITokenProvider tokenProvider) {
-        _context = context;
-        _tokenProvider = tokenProvider;
-    }
-
+public class LoggedUser(
+    MyRecipeBookDbContext context, 
+    ITokenProvider tokenProvider) : ILoggedUser
+{
     public async Task<User> User() {
-        var token = _tokenProvider.Value();
+        var token = tokenProvider.Value();
         var tokenHandler = new JwtSecurityTokenHandler();
 
         // Lê o token JWT e o converte em um objeto JwtSecurityToken, que permite acessar as informações contidas no token.
@@ -31,7 +26,7 @@ public class LoggedUser : ILoggedUser {
         var identifier = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Sid).Value;
         var userIdentifier = Guid.Parse(identifier);
 
-        return await _context
+        return await context
             .Users
             .AsNoTracking()
             .FirstAsync(user => user.Active && user.UserIdentifier == userIdentifier);
