@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Azure.Messaging.ServiceBus;
 using Azure.Storage.Blobs;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using MyRecipeBook.Domain.Repositories.Users;
 using MyRecipeBook.Domain.Security.Cryptography;
 using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.ServiceBus;
 using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Infrastructure.DataAccess;
 using MyRecipeBook.Infrastructure.DataAccess.Repositories;
@@ -18,6 +20,7 @@ using MyRecipeBook.Infrastructure.Security.Cryptography;
 using MyRecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using MyRecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using MyRecipeBook.Infrastructure.Services.LoggedUser;
+using MyRecipeBook.Infrastructure.Services.ServiceBus;
 using MyRecipeBook.Infrastructure.Services.Storage;
 
 namespace MyRecipeBook.Infrastructure;
@@ -41,6 +44,7 @@ public static class DependencyInjectionExtension
         AddFluentMigrator_MySql(services, configuration);
 
         AddAzureStorage(services, configuration);
+        AddQueue(services, configuration);
     }
 
     private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
@@ -112,5 +116,18 @@ public static class DependencyInjectionExtension
         {
            services.AddScoped<IBlobStorageService>(_ => new AzureStorageService(new BlobServiceClient(connectionString)));
         }
+    }
+    
+    private static void AddQueue(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount");
+
+        var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
+        {
+            TransportType = ServiceBusTransportType.AmqpWebSockets
+        });
+        
+        var deleteQueue = new DeleteUserQueue(client.CreateSender("user")); // nome da fila
+        services.AddScoped<IDeleteUserQueue>(opt => deleteQueue);
     }
 }
