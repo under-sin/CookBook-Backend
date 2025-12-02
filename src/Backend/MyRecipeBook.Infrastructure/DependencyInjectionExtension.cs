@@ -69,6 +69,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
+        services.AddScoped<IDeleteUserOnlyRepository, RecipeRepository>();
     }
 
     private static void AddFluentMigrator_MySql(this IServiceCollection services, IConfiguration configuration)
@@ -128,6 +129,13 @@ public static class DependencyInjectionExtension
         });
         
         var deleteQueue = new DeleteUserQueue(client.CreateSender("user")); // nome da fila
+        
+        var deleteUserProcessor = new DeleteUserProcessor(client.CreateProcessor("user", new ServiceBusProcessorOptions
+        {
+            MaxConcurrentCalls = 1 // processar uma mensagem por vez
+        }));
+        
+        services.AddSingleton(deleteUserProcessor);
         services.AddScoped<IDeleteUserQueue>(opt => deleteQueue);
     }
 }

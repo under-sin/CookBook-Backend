@@ -4,11 +4,12 @@ using MyRecipeBook.Domain.Dtos;
 using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.Recipes;
+using MyRecipeBook.Domain.Repositories.Users;
 
 namespace MyRecipeBook.Infrastructure.DataAccess.Repositories;
 
 public class RecipeRepository(MyRecipeBookDbContext context)
-    : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository, IRecipeUpdateOnlyRepository
+    : IRecipeWriteOnlyRepository, IRecipeReadOnlyRepository, IRecipeUpdateOnlyRepository, IDeleteUserOnlyRepository
 {
     public async Task Add(Recipe recipe) => await context.Recipes.AddAsync(recipe);
 
@@ -91,5 +92,19 @@ public class RecipeRepository(MyRecipeBookDbContext context)
             .Include(r => r.Ingredients)
             .Include(r => r.Instructions)
             .Include(r => r.DishTypes);
+    }
+
+    public async Task DeleteAccount(Guid userIdentifier)
+    {
+        var user = await context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserIdentifier == userIdentifier);
+        if (user == null)
+            return;
+        
+        var recipes = context.Recipes.Where(x => x.UserId == user.Id);
+        context.Recipes.RemoveRange(recipes);
+        
+        context.Users.Remove(user);
     }
 }
