@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Azure.Messaging.ServiceBus;
+using Azure.Storage.Blobs;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +11,8 @@ using MyRecipeBook.Domain.Repositories.Users;
 using MyRecipeBook.Domain.Security.Cryptography;
 using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.ServiceBus;
+using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Infrastructure.DataAccess;
 using MyRecipeBook.Infrastructure.DataAccess.Repositories;
 using MyRecipeBook.Infrastructure.Extensions;
@@ -16,6 +20,8 @@ using MyRecipeBook.Infrastructure.Security.Cryptography;
 using MyRecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using MyRecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using MyRecipeBook.Infrastructure.Services.LoggedUser;
+using MyRecipeBook.Infrastructure.Services.ServiceBus;
+using MyRecipeBook.Infrastructure.Services.Storage;
 
 namespace MyRecipeBook.Infrastructure;
 
@@ -26,7 +32,7 @@ public static class DependencyInjectionExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        AddPasswordEncripter(services, configuration);
+        AddPasswordEncripter(services);
         AddRepositories(services);
         AddLoggedUser(services);
         AddToken(services, configuration);
@@ -36,8 +42,11 @@ public static class DependencyInjectionExtension
 
         AddDbContext_MySql(services, configuration);
         AddFluentMigrator_MySql(services, configuration);
+
+        AddAzureStorage(services, configuration);
+        AddQueue(services, configuration);
     }
-    
+
     private static void AddDbContext_MySql(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
@@ -48,7 +57,7 @@ public static class DependencyInjectionExtension
             dbContextOptions.UseMySql(connectionString, serverVersion);
         });
     }
-    
+
     private static void AddRepositories(IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -60,8 +69,9 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
+        services.AddScoped<IDeleteUserOnlyRepository, RecipeRepository>();
     }
-    
+
     private static void AddFluentMigrator_MySql(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.ConnectionString();
@@ -80,21 +90,46 @@ public static class DependencyInjectionExtension
         var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
         var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
 
-        services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
-        services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
+        services.AddScoped<IAccessTokenGenerator>(_ => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+        services.AddScoped<IAccessTokenValidator>(_ => new JwtTokenValidator(signingKey!));
     }
 
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
 
     // Dessa maneira podemos usar a classe PasswordEncripter em qualquer lugar que seja injetada
-    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
+    private static void AddPasswordEncripter(IServiceCollection services)
     {
-        /*
-         * Para pegar os valores do appsettings.json usando o GetValue<string>
-         * é preciso instalar o pacote Microsoft.Extensions.Configuration.Binder
-         */
-        var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
+    }
 
-        services.AddScoped<IPasswordEncripter>(option => new Sha512Encripter(additionalKey!));
+    // Configuração do Azure Storage
+    private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure");
+
+        if (!string.IsNullOrEmpty(connectionString))
+        {
+           services.AddScoped<IBlobStorageService>(_ => new AzureStorageService(new BlobServiceClient(connectionString)));
+        }
+    }
+    
+    private static void AddQueue(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount");
+
+        var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
+        {
+            TransportType = ServiceBusTransportType.AmqpWebSockets
+        });
+        
+        var deleteQueue = new DeleteUserQueue(client.CreateSender("user")); // nome da fila
+        
+        var deleteUserProcessor = new DeleteUserProcessor(client.CreateProcessor("user", new ServiceBusProcessorOptions
+        {
+            MaxConcurrentCalls = 1 // processar uma mensagem por vez
+        }));
+        
+        services.AddSingleton(deleteUserProcessor);
+        services.AddScoped<IDeleteUserQueue>(opt => deleteQueue);
     }
 }

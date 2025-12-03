@@ -31,12 +31,11 @@ public class ChangePasswordUseCase(
         await unitOfWork.Commit();
     }
 
-    private void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) {
+    private void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) 
+    {
         var result = new ChangePasswordValidator().Validate(request);
 
-        var currentPasswordEncrypted = encripter.Encrypt(request.Password);
-        
-        if(currentPasswordEncrypted.Equals(loggedUser.Password).IsFalse())
+        if(encripter.IsValid(request.Password, loggedUser.Password).IsFalse())
             result.Errors.Add(new ValidationFailure(nameof(request.Password), ResourceMessagesException.PASSWORD_DIFFERENT_CURRENT_PASSWORD));   
 
         if (result.IsValid.IsFalse())

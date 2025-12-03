@@ -1,4 +1,5 @@
 using AutoMapper;
+using MyRecipeBook.Application.Extensions;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Entities;
@@ -6,17 +7,20 @@ using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Recipes;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
+using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionsBase;
 
 namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
 public class RegisterRecipeUseCase(
     IRecipeWriteOnlyRepository repository,
+    IBlobStorageService blobStorageService,
     ILoggedUser loggedUser,
     IUnitOfWork unitOfWork,
     IMapper mapper) : IRegisterRecipeUseCase
 {
-    public async Task<ResponseRegisteredRecipeJson> Execute(RequestRecipeJson request)
+    public async Task<ResponseRegisteredRecipeJson> Execute(RequestRegisterRecipeFormData request)
     {
         Validate(request);
 
@@ -31,6 +35,20 @@ public class RegisterRecipeUseCase(
             instructions.ElementAt(index).Step = index + 1;
         
         recipe.Instructions = mapper.Map<IList<Instruction>>(instructions);
+
+        // refatorar essa parte de upload de imagem
+        if (request.Image != null)
+        {
+            var fileStream = request.Image.OpenReadStream();
+            var (isValidImage, extension) = fileStream.ValidateAndGetImageExtension();
+            
+            recipe.ImageIdentifier = $"{Guid.NewGuid()}{extension}";
+
+            if (isValidImage.IsFalse())
+                throw new ErrorOnValidationException([ResourceMessagesException.INVALID_IMAGE_FORMAT]);
+            
+            await blobStorageService.Upload(loggedUSer, fileStream, recipe.ImageIdentifier);
+        }
         
         await repository.Add(recipe);
         await unitOfWork.Commit();

@@ -194,5 +194,11 @@ namespace MyRecipeBook.Exceptions {
                 return ResourceManager.GetString("DUPLICATED_INGREDIENTS", resourceCulture);
             }
         }
+        
+        public static string INVALID_IMAGE_FORMAT {
+            get {
+                return ResourceManager.GetString("INVALID_IMAGE_FORMAT", resourceCulture);
+            }
+        }
     }
 }

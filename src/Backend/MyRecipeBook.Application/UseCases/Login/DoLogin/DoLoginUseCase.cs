@@ -1,5 +1,6 @@
 ﻿using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
+using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.Users;
 using MyRecipeBook.Domain.Security.Cryptography;
 using MyRecipeBook.Domain.Security.Tokens;
@@ -14,9 +15,9 @@ public class DoLoginUseCase(
 {
     public async Task<ResponseRegisterUserJson> Execute(RequestLoginJson request)
     {
-        var encryptedPassword = passwordEncripter.Encrypt(request.Password);
-        var user = await userRepository.GetUserByEmailAndPassword(request.Email, encryptedPassword)
-                   ?? throw new InvalidLoginException();
+        var user = await userRepository.GetByEmail(request.Email);
+        if (user == null || passwordEncripter.IsValid(request.Password, user.Password).IsFalse())
+            throw new InvalidLoginException();
 
         return new ResponseRegisterUserJson
         {

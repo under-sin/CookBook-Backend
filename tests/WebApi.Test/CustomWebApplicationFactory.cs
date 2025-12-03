@@ -1,4 +1,5 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.IdEncrypter;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,6 +32,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 // Adiciona um novo contexto de banco de dados em memoria
                 var provider = services.AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
 
+                var blobStorage = new BlobStorageServiceBuilder().Build();
+                services.AddScoped(opt => blobStorage);
+                
                 services.AddDbContext<MyRecipeBookDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBook.API.Attributes;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
+using MyRecipeBook.Application.UseCases.User.Delete.Request;
 using MyRecipeBook.Application.UseCases.User.Profile.GetUserProfile;
 using MyRecipeBook.Application.UseCases.User.Profile.UpdateUserProfile;
 using MyRecipeBook.Application.UseCases.User.Register;
@@ -55,6 +56,17 @@ public class UserController : MyRecipeBookBaseController
         [FromBody] RequestUpdateUserPasswordJson request)
     {
         await useCase.Execute(request);
+
+        return NoContent();
+    }
+    
+    
+    [HttpDelete]
+    [AuthenticationUser]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Delete([FromServices] IRequestDeleteUserUseCase useCase)
+    {
+        await useCase.Execute();
 
         return NoContent();
     }

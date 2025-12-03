@@ -3,7 +3,7 @@ using FluentMigrator;
 
 namespace MyRecipeBook.Infrastructure.Migrations.Versions;
 
-[Migration(DatabaseVersions.TABLE_RECIPES, "Create a table to save the recipe's information")]
+[Migration(DatabaseVersions.TableRecipes, "Create a table to save the recipe's information")]
 public class Version0000002 : VersionBase
 {
     public override void Up()

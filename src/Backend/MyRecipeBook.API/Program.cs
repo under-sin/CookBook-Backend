@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using MyRecipeBook.API.BackgroundServices;
 using MyRecipeBook.API.Converters;
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
@@ -61,6 +62,10 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Configuração para o HttpContextAccessor ser acessível em toda a aplicação
 builder.Services.AddHttpContextAccessor();
+
+// Configuração para o serviço de background que consome a fila de exclusão de usuário
+if (!builder.Configuration.IsUnitTestEnvironment())
+    builder.Services.AddHostedService<DeleteUserService>();
 
 var app = builder.Build();
 

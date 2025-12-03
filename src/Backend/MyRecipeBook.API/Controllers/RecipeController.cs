@@ -4,6 +4,7 @@ using MyRecipeBook.API.Binders;
 using MyRecipeBook.Application.UseCases.Recipe.Delete;
 using MyRecipeBook.Application.UseCases.Recipe.Filter;
 using MyRecipeBook.Application.UseCases.Recipe.GetById;
+using MyRecipeBook.Application.UseCases.Recipe.Image;
 using MyRecipeBook.Application.UseCases.Recipe.Register;
 using MyRecipeBook.Application.UseCases.Recipe.Update;
 using MyRecipeBook.Communication.Requests;
@@ -19,7 +20,7 @@ public class RecipeController : MyRecipeBookBaseController
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(
         [FromServices] IRegisterRecipeUseCase useCase,
-        [FromBody] RequestRecipeJson request)
+        [FromForm] RequestRegisterRecipeFormData request)
     {
         var response = await useCase.Execute(request);
 
@@ -77,6 +78,20 @@ public class RecipeController : MyRecipeBookBaseController
         [FromBody] RequestRecipeJson request)
     {
         await useCase.Execute(id, request);
+
+        return NoContent();
+    }
+    
+    [HttpPut("image/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Image(
+        [FromServices] IUploadImageCoverUseCase useCase,
+        [FromRoute][ModelBinder(typeof(MyRecipeBookIdBinder))] long id,
+        IFormFile file)
+    {
+        await useCase.Execute(id, file);
 
         return NoContent();
     }

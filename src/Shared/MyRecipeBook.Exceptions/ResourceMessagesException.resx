@@ -192,4 +192,7 @@
   <data name="DUPLICATED_INGREDIENTS" xml:space="preserve">
     <value>Duplicated Ingredients.</value>
   </data>
+  <data name="INVALID_IMAGE_FORMAT" xml:space="preserve">
+    <value>Only valid PNG, JPG, and JPEG images are accepted.</value>
+  </data>
 </root>
