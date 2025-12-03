@@ -28,13 +28,9 @@ public class UserRepository
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier)
         => await _context.Users.AnyAsync(e => e.UserIdentifier.Equals(userIdentifier) && e.Active);
 
-    public async Task<User?> GetUserByEmailAndPassword(string email, string password) {
-        return await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(user => user.Active
-                                         && user.Email.Equals(email)
-                                         && user.Password.Equals(password));
-    }
+    public async Task<User?> GetByEmail(string email)
+        => await _context.Users
+            .FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Active);
 
     public async Task<User> GetByIdAsync(long userId)
     {

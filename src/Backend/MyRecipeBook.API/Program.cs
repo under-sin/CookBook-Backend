@@ -64,7 +64,8 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddHttpContextAccessor();
 
 // Configuração para o serviço de background que consome a fila de exclusão de usuário
-builder.Services.AddHostedService<DeleteUserService>();
+if (!builder.Configuration.IsUnitTestEnvironment())
+    builder.Services.AddHostedService<DeleteUserService>();
 
 var app = builder.Build();
 

@@ -51,7 +51,7 @@ public class DoLoginUseCaseTest
         var readOnlyRepository = new UserReadOnlyRepositoryBuilder();
 
         if (user is not null)
-            readOnlyRepository.GetUserByEmailAndPassword(user);
+            readOnlyRepository.GetByEmail(user);
 
         return new DoLoginUseCase(
             readOnlyRepository.Build(),

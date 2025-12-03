@@ -32,7 +32,7 @@ public static class DependencyInjectionExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        AddPasswordEncripter(services, configuration);
+        AddPasswordEncripter(services);
         AddRepositories(services);
         AddLoggedUser(services);
         AddToken(services, configuration);
@@ -97,15 +97,9 @@ public static class DependencyInjectionExtension
     private static void AddLoggedUser(IServiceCollection services) => services.AddScoped<ILoggedUser, LoggedUser>();
 
     // Dessa maneira podemos usar a classe PasswordEncripter em qualquer lugar que seja injetada
-    private static void AddPasswordEncripter(IServiceCollection services, IConfiguration configuration)
+    private static void AddPasswordEncripter(IServiceCollection services)
     {
-        /*
-         * Para pegar os valores do appsettings.json usando o GetValue<string>
-         * é preciso instalar o pacote Microsoft.Extensions.Configuration.Binder
-         */
-        var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
-
-        services.AddScoped<IPasswordEncripter>(_ => new Sha512Encripter(additionalKey!));
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
 
     // Configuração do Azure Storage
