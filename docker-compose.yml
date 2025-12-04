@@ -1,15 +1,17 @@
-﻿services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres_container
+﻿version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: MyRecipeBook
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: MyRecipeBookDB
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  postgres_data:
+  mysql_data:

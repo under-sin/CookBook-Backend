@@ -33,7 +33,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
 
             if (exist.IsFalse())
             {
-                throw new MyRecipeBookException(ResourceMessagesException.USER_WITHOUT_PERMISSION);
+                throw new AuthorizationException(ResourceMessagesException.USER_WITHOUT_PERMISSION);
             }
         }
         catch (SecurityTokenExpiredException)
@@ -60,7 +60,7 @@ public class AuthenticatedUserFilter : IAsyncAuthorizationFilter
         if (string.IsNullOrEmpty(authentication))
         {
             // adicionar mesangem de erro no resource
-            throw new MyRecipeBookException(ResourceMessagesException.NO_TOKEN);
+            throw new AuthorizationException(ResourceMessagesException.NO_TOKEN);
         }
 
         // Trata o token recebido no header para retornar sem o "Bearer "

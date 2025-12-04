@@ -1,7 +1,5 @@
-using AutoMapper.Configuration.Annotations;
 using FluentValidation.Results;
 using MyRecipeBook.Communication.Requests;
-using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Users;
@@ -33,13 +31,12 @@ public class ChangePasswordUseCase(
         await unitOfWork.Commit();
     }
 
-    public void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) {
+    private void Validate(RequestUpdateUserPasswordJson request, Domain.Entities.User loggedUser) 
+    {
         var result = new ChangePasswordValidator().Validate(request);
 
-        var currentPasswordEncrypted = encripter.Encrypt(request.Password);
-        
-        if(currentPasswordEncrypted.Equals(loggedUser.Password).IsFalse())
-            result.Errors.Add(new ValidationFailure(nameof(request.Password), "Current password is incorrect."));   
+        if(encripter.IsValid(request.Password, loggedUser.Password).IsFalse())
+            result.Errors.Add(new ValidationFailure(nameof(request.Password), ResourceMessagesException.PASSWORD_DIFFERENT_CURRENT_PASSWORD));   
 
         if (result.IsValid.IsFalse())
         {

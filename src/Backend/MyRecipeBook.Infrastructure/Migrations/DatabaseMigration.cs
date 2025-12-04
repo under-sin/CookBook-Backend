@@ -3,38 +3,38 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Domain.Extensions;
 using MySqlConnector;
-using Npgsql;
 
 namespace MyRecipeBook.Infrastructure.Migrations;
 
-public static class DatabaseMigration {
-    public static void Migrate(string connectionString, IServiceProvider serviceProvider) {
+public static class DatabaseMigration
+{
+    public static void Migrate(string connectionString, IServiceProvider serviceProvider)
+    {
         EnsureDatabase(connectionString);
         MigrateDatabase(serviceProvider);
     }
 
-    public static void EnsureDatabase(string connectionString) {
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+    private static void EnsureDatabase(string connectionString)
+    {
+        var connectionStringBuilder = new MySqlConnectionStringBuilder(connectionString);
         var databaseName = connectionStringBuilder.Database;
 
         connectionStringBuilder.Database = null;
         connectionStringBuilder.Remove("Database");
 
-        using var dbConnection = new NpgsqlConnection(connectionStringBuilder.ConnectionString);
+        using var dbConnection = new MySqlConnection(connectionStringBuilder.ConnectionString);
 
         var parameters = new DynamicParameters();
         parameters.Add("dbname", databaseName);
 
-        var records = dbConnection.Query(
-            $"SELECT 1 FROM pg_database WHERE datname = @dbname",
-            parameters
-        );
+        var records = dbConnection.Query("SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = @dbname", parameters);
 
         if (records.Any().IsFalse())
-            dbConnection.Execute($"CREATE DATABASE \"{databaseName}\"");
+            dbConnection.Execute($"CREATE DATABASE {databaseName}");
     }
 
-    private static void MigrateDatabase(IServiceProvider serviceProvider) {
+    private static void MigrateDatabase(IServiceProvider serviceProvider)
+    {
         var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
 
         // Lista todas as migrations que vai ta dentro do versions

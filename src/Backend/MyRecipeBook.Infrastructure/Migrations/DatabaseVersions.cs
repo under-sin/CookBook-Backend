@@ -7,4 +7,6 @@ public abstract class DatabaseVersions
      * DatabaseVersions.TableUser
      */
     public const int TableUser = 1;
+    public const int TableRecipes = 2;
+    public const int AddTableImageIdentifier = 3;
 }

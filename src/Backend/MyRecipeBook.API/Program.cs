@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using MyRecipeBook.API.BackgroundServices;
 using MyRecipeBook.API.Converters;
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
@@ -16,9 +17,13 @@ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => {
+builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<IdsFilter>();
+
     // Configuração para o swagger mostrar o botão de autenticação   
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
         Description = @"JWT Authorization header using the Bearer scheme. 
                       Enter 'Bearer' [space] and then your token in the text input below.
                       Example: 'Bearer 123abc",
@@ -57,6 +62,10 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 // Configuração para o HttpContextAccessor ser acessível em toda a aplicação
 builder.Services.AddHttpContextAccessor();
+
+// Configuração para o serviço de background que consome a fila de exclusão de usuário
+if (!builder.Configuration.IsUnitTestEnvironment())
+    builder.Services.AddHostedService<DeleteUserService>();
 
 var app = builder.Build();
 

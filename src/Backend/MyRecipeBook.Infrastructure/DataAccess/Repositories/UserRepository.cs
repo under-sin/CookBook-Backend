@@ -4,11 +4,16 @@ using MyRecipeBook.Domain.Repositories.Users;
 
 namespace MyRecipeBook.Infrastructure.DataAccess.Repositories;
 
-public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository {
+public class UserRepository
+    : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository
+{
     private readonly MyRecipeBookDbContext _context;
 
-    public UserRepository(MyRecipeBookDbContext context) => _context = context;
-
+    public UserRepository(MyRecipeBookDbContext context)
+    {
+        _context = context;
+    }
+    
     public async Task Add(User user) => await _context.Users.AddAsync(user);
 
     public void UpdateUserProfile(User user) => _context.Users.Update(user);
@@ -23,13 +28,9 @@ public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository,
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier)
         => await _context.Users.AnyAsync(e => e.UserIdentifier.Equals(userIdentifier) && e.Active);
 
-    public async Task<User?> GetUserByEmailAndPassword(string email, string password) {
-        return await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(user => user.Active
-                                         && user.Email.Equals(email)
-                                         && user.Password.Equals(password));
-    }
+    public async Task<User?> GetByEmail(string email)
+        => await _context.Users
+            .FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Active);
 
     public async Task<User> GetByIdAsync(long userId)
     {
